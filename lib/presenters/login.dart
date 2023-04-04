@@ -170,17 +170,26 @@ class Login extends StatelessWidget {
     return SizedBox(
       height: 50,
       width: 50,
-      child: ElevatedButton(
+      child:
+      ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: const BorderSide(
-                color: Colors.grey,
-              ),
-            )),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+
+          ),
+        ).copyWith(
+          side: MaterialStateProperty.resolveWith<BorderSide>(
+                (states) {
+              if (states.contains(MaterialState.pressed)) {
+                return const BorderSide(color: Colors.blue); // цвет границы при нажатии
+              }
+              return const BorderSide(color: Colors.grey);
+            },
+          ),
+        ),
         child: Image.asset(path),
       ),
     );
