@@ -170,7 +170,6 @@ class Login extends StatelessWidget {
     return SizedBox(
       height: 50,
       width: 50,
-<<<<<<< HEAD
       child:
       ElevatedButton(
         onPressed: () {},
@@ -191,19 +190,6 @@ class Login extends StatelessWidget {
             },
           ),
         ),
-=======
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: const BorderSide(
-                color: Colors.grey,
-              ),
-            )),
->>>>>>> origin/main
         child: Image.asset(path),
       ),
     );
