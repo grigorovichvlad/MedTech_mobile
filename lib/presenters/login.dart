@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
 
-  List<String> enterViaImages = [
+  List<String> loginViaImages = [
     'assets/images/apple.webp',
     'assets/images/google.png',
     'assets/images/at.png',
@@ -86,11 +86,11 @@ class Login extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                enterViaButton(enterViaImages[0]),
+                loginViaButton(loginViaImages[0]),
                 SizedBox(width: 30),
-                enterViaButton(enterViaImages[1]),
+                loginViaButton(loginViaImages[1]),
                 SizedBox(width: 30),
-                enterViaButton(enterViaImages[2]),
+                loginViaButton(loginViaImages[2]),
               ],
             ),
             Padding(
@@ -166,7 +166,7 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget enterViaButton(String path) {
+  Widget loginViaButton(String path) {
     return SizedBox(
       height: 50,
       width: 50,
