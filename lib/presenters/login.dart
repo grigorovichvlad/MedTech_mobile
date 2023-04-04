@@ -32,8 +32,8 @@ class Login extends StatelessWidget {
                           child:
                           Transform.translate(
                             offset: Offset(-15, -125),
-                            child: Image.network(
-                              'https://cdn.wallpapersafari.com/77/66/P1uWfk.png',
+                            child: Image.asset(
+                              'assets/images/backround_login.png',
                               scale: 3,
                             ),
                           ),
