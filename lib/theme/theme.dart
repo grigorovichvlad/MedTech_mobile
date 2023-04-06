@@ -4,8 +4,8 @@ final defaultTheme = ThemeData(
   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey),
   useMaterial3: true,
   scaffoldBackgroundColor: Colors.white,
-  textTheme: TextTheme(
-    bodyMedium: const TextStyle(
+  textTheme: const TextTheme(
+    bodyMedium: TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.w500,
       fontSize: 20,
@@ -15,7 +15,7 @@ final defaultTheme = ThemeData(
       fontWeight: FontWeight.normal,
       fontSize: 14,
     ),
-    headlineLarge: const TextStyle(
+    headlineLarge: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 40,
