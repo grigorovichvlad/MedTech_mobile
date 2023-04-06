@@ -47,5 +47,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Приложение использует Bluetooth для связи с другими устройствами.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>Приложение использует Bluetooth для связи с другими устройствами.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Приложение использует геолокацию для определения ближайших Bluetooth устройств.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Приложение использует геолокацию для определения ближайших Bluetooth устройств.</string>
 </dict>
 </plist>

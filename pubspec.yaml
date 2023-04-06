@@ -15,6 +15,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.2
+  flutter_reactive_ble: ^5.0.3
+  get_it: ^7.2.0
 
 dev_dependencies:
   flutter_test:
