@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_tech_mobile/features/login/bloc/login_page_bloc.dart';
+import 'dart:ui';
+
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
 
@@ -13,13 +15,17 @@ class Login extends StatelessWidget {
 
   // @override
   // void initState() {
-  //   _loginBloc.add(Login());
-  //   super.initState();
+  //   //_loginBloc.add(Login());
+  //   //super.initState();
   // }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,24 +34,13 @@ class Login extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        SizedBox(
-                            height: 200,
-                            child: Container(
-                            )),
-                        Positioned(
-                          top: 0,
-                          child:
-                          Transform.translate(
-                            offset: Offset(-15, -125),
-                            child: Image.asset(
-                              'assets/images/backround_login.png',
-                              scale: 3,
-                            ),
-                          ),
+                    SizedBox(
+                      height: 200,
+                      child: Transform.scale(
+                          alignment: Alignment.bottomCenter,
+                          scale: window.physicalSize.width / 711,
+                          child: Image.asset('assets/images/backround_login.png'),
                         ),
-                      ],
                     ),
                     SizedBox(
                       height: 50,
@@ -57,6 +52,7 @@ class Login extends StatelessWidget {
                 ),
                 Positioned(
                   top: 150,
+                  left: MediaQuery.of(context).size.width / 2 - 200,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(145, 0, 145, 0),
                     child: SizedBox(
@@ -67,7 +63,10 @@ class Login extends StatelessWidget {
                           //border: Border.all(color: Colors.grey, width: 2),
                           borderRadius: BorderRadius.circular(20.0),
                           boxShadow: const [
-                            BoxShadow(color: Color.fromARGB(50, 0, 0, 0), offset: Offset(0, 5), blurRadius: 5)
+                            BoxShadow(
+                                color: Color.fromARGB(50, 0, 0, 0),
+                                offset: Offset(0, 5),
+                                blurRadius: 5)
                           ],
                           image: const DecorationImage(
                             image: AssetImage('assets/images/icon.png'),
@@ -80,14 +79,11 @@ class Login extends StatelessWidget {
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
               child: Text(
                 'Вход',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                ),
+                style: textTheme.headlineLarge,
               ),
             ),
             Row(
@@ -131,7 +127,7 @@ class Login extends StatelessWidget {
                           border: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
-                            BorderSide(color: Colors.blue, width: 2),
+                                BorderSide(color: Colors.blue, width: 2),
                           ),
                           labelText: 'Пароль',
                           hintText: 'Введите пароль',
@@ -153,7 +149,7 @@ class Login extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   //_loginBloc.add(Login());
-                  debugPrint("23"); // login
+                  Navigator.pushNamed(context, '/devices'); // login
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -180,21 +176,20 @@ class Login extends StatelessWidget {
     return SizedBox(
       height: 50,
       width: 50,
-      child:
-      ElevatedButton(
+      child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
-
           ),
         ).copyWith(
           side: MaterialStateProperty.resolveWith<BorderSide>(
-                (states) {
+            (states) {
               if (states.contains(MaterialState.pressed)) {
-                return const BorderSide(color: Colors.blue); // цвет границы при нажатии
+                return const BorderSide(
+                    color: Colors.blue); // цвет границы при нажатии
               }
               return const BorderSide(color: Colors.grey);
             },
