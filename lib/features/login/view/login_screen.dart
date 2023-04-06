@@ -30,7 +30,7 @@ class Login extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Stack(
+            Stack( // Фон с облаками + иконка приложения
               children: <Widget>[
                 Column(
                   children: <Widget>[
@@ -52,27 +52,24 @@ class Login extends StatelessWidget {
                 ),
                 Positioned(
                   top: 150,
-                  left: MediaQuery.of(context).size.width / 2 - 200,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(145, 0, 145, 0),
-                    child: SizedBox(
-                      width: 100.0,
-                      height: 100.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          //border: Border.all(color: Colors.grey, width: 2),
-                          borderRadius: BorderRadius.circular(20.0),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Color.fromARGB(50, 0, 0, 0),
-                                offset: Offset(0, 5),
-                                blurRadius: 5)
-                          ],
-                          image: const DecorationImage(
-                            image: AssetImage('assets/images/icon.png'),
-                          ),
-                          color: Colors.white,
+                  left: window.physicalSize.width / window.devicePixelRatio / 2 - 50,
+                  child: SizedBox(
+                    width: 100.0,
+                    height: 100.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        //border: Border.all(color: Colors.grey, width: 2),
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Color.fromARGB(50, 0, 0, 0),
+                              offset: Offset(0, 5),
+                              blurRadius: 5)
+                        ],
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/icon.png'),
                         ),
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -86,7 +83,7 @@ class Login extends StatelessWidget {
                 style: textTheme.headlineLarge,
               ),
             ),
-            Row(
+            Row( // "Войти через" кнопки
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 loginViaButton(loginViaImages[0]),
@@ -96,8 +93,8 @@ class Login extends StatelessWidget {
                 loginViaButton(loginViaImages[2]),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(50, 30, 50, 0),
+            Padding( // Контейнер с полями для ввода
+              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.2, 30, MediaQuery.of(context).size.width * 0.2, 0),
               child: Column(
                 children: <Widget>[
                   Container(
@@ -144,7 +141,7 @@ class Login extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              width: 300,
+              width: MediaQuery.of(context).size.width * 0.4,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {

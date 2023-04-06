@@ -11,11 +11,12 @@ final defaultTheme = ThemeData(
       fontSize: 20,
     ),
     labelSmall: TextStyle(
-      color: Colors.white.withOpacity(0.6),
-      fontWeight: FontWeight.w700,
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
       fontSize: 14,
     ),
     headlineLarge: const TextStyle(
+      color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 40,
     ),

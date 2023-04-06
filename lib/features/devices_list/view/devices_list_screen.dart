@@ -7,46 +7,50 @@ class BluetoothDevices extends StatefulWidget {
   State<BluetoothDevices> createState() => _BluetoothDevicesState();
 }
 
-
-Widget bluetoothCardTemplate() {
-  return Container(
-    child: Row(
-      children: [
-        Column(
-          children: <Widget>[
-            Text('Device name'),
-            Text('Description'),
-          ],
-        ),
-      ],
-    ),
+Widget bluetoothCardTemplate(TextStyle? textStyle) {
+  textStyle ??= const TextStyle(
+      color: Colors.black, fontWeight: FontWeight.normal, fontSize: 14);
+  return Row(
+    children: [
+      Column(
+        children: <Widget>[
+          Text(
+            'Device name',
+            style: textStyle,
+          ),
+          Text(
+            'Description',
+            style: textStyle,
+          ),
+        ],
+      ),
+    ],
   );
 }
 
 class _BluetoothDevicesState extends State<BluetoothDevices> {
-
   List<Widget> txt = [];
 
-  void fun() {
+  void fun(TextStyle? textStyle) {
     for (int i = 0; i < 1000; i++) {
       txt.add(
-        bluetoothCardTemplate(),
+        bluetoothCardTemplate(textStyle),
       );
       txt.add(Divider(height: 10));
     }
   }
 
-  @override
+  /*@override
   void initState() {
     super.initState();
-    fun();
-  }
+
+  }*/
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-
+    fun(textTheme.labelSmall);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
