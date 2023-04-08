@@ -24,17 +24,6 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
     super.initState();
   }
 
-  // List<Widget> txt = [];
-  //
-  // void fun(TextStyle? textStyle) {
-  //   for (int i = 0; i < 2; i++) {
-  //     txt.add(
-  //       bluetoothCardTemplate(textStyle),
-  //     );
-  //     txt.add(Divider(height: 10));
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -2,42 +2,32 @@ import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.d
 import 'package:flutter/material.dart';
 
 class DeviceTile extends StatelessWidget{
-  const DeviceTile({
-   //super.key,
+  const DeviceTile({Key? key,
    required this.device,
-});
-  final BluetoothDevice device;
+}) : super(key: key);
 
-  // @override
-  // Widget bluetoothCardTemplate(TextStyle? textStyle) {
-  //   textStyle ??= const TextStyle(
-  //       color: Colors.black, fontWeight: FontWeight.normal, fontSize: 14);
-  //   return Row(
-  //     children: [
-  //       Column(
-  //         children: <Widget>[
-  //           Text(
-  //             'Device name',
-  //             style: textStyle,
-  //           ),
-  //           Text(
-  //             'Description',
-  //             style: textStyle,
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
+  final BluetoothDevice device;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme =  Theme.of(context);
     return ListTile(
+      //leading: Image.network(coin.imageURL),
       title: Text(
-        device.name,
-        style: theme.textTheme.bodyMedium
+          device.name,
+          style: theme.textTheme.bodyMedium
       ),
+      // subtitle: Text(
+      //   '${device.id} \$',
+      //   style: theme.textTheme.labelSmall,
+      // ),
+      trailing: const Icon(Icons.arrow_forward_ios),
+      onTap: (){
+        Navigator.of(context).pushNamed(
+          '/device',
+          arguments: device,
+        );
+      },
     );
   }
 }

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_reactive_ble-5.0.3" />
-      <root url="file://$PROJECT_DIR$/../AppData/Local/Pub/Cache/hosted/pub.dartlang.org/reactive_ble_mobile-5.0.3" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dev/flutter_reactive_ble-5.0.3" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dev/reactive_ble_mobile-5.0.3" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

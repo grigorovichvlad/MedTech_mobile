@@ -1,54 +1,60 @@
 import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 
 class BluetoothDeviceRepository implements AbstractBluetoothRepository {
-
   BluetoothDeviceRepository({required this.ble});
 
-  final FlutterReactiveBle ble; // = FlutterReactiveBle();
-  StreamSubscription? _scanSubscription; // Подписка на события сканирования
+  final FlutterReactiveBle ble;
+  final List<BluetoothDevice> bluetoothDevices = [];
+  StreamSubscription? _scanSubscription;
 
   @override
   Future<List<BluetoothDevice>> scanForDevices() async {
-    final List<BluetoothDevice> bluetoothDevices = [];
+    await scan();
 
-    final scanResult = _startScan();
-
-    const scanDuration = Duration(seconds: 10); // Длительность сканирования
-    _scanSubscription = scanResult.take(scanDuration.inSeconds).listen((device) {
-      if (device.name.isNotEmpty) { // Если имя устройства не пустое, добавляем его в список
-        final bluetoothDevice = BluetoothDevice(
-          //id: device.id,
-          name: device.name,
-        );
-        bluetoothDevices.add(bluetoothDevice);
-      }
-    });
-
-    await stopScan();
-
+    // Return the list of found devices after the scan is done.
+    debugPrint(bluetoothDevices.toString());
     return bluetoothDevices;
   }
 
+  Future<void> scan() async {
+    const scanDuration = Duration(seconds: 10);
+    _startScan();
+
+    // Listen for devices and add them to the list.
+    _scanSubscription = ble.statusStream.listen((status) {
+      if (status == BleStatus.ready) {
+        _startScan().listen((device) {
+          if (device.name.isNotEmpty) {
+            debugPrint(device.name.toString());
+            final bluetoothDevice = BluetoothDevice(
+              name: device.name,
+            );
+            bluetoothDevices.add(bluetoothDevice);
+          }
+        });
+      }
+    });
+
+    // Cancel the scan after the given duration.
+    await Future.delayed(scanDuration);
+    await stopScan();
+  }
+
   Stream<DiscoveredDevice> _startScan() {
-    const scanMode = ScanMode.lowLatency; // Режим сканирования с низкой задержкой
+    const scanMode = ScanMode.lowLatency;
     const scanForAndroidOnlyServices = false;
     return ble.scanForDevices(
-      withServices: [], // Сканирование всех доступных служб
+      withServices: [],
       scanMode: scanMode,
-      //requireLocationServicesEnabled: true, // Требование включенных служб геолокации.ХЗ надо или нет
     );
   }
 
   @override
   Future<void> stopScan() async {
     await _scanSubscription?.cancel();
-    _scanSubscription = null; // Обнуление подписки
+    _scanSubscription = null;
   }
-
-    //     //debugPrint('Found device: ${device.name} (${device.id})');
-    //     //debugPrint('Error occurred while scanning: $error');
-
-  }
+}

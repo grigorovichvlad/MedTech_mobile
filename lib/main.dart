@@ -7,6 +7,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.registerSingleton(BluetoothDeviceRepository(ble: FlutterReactiveBle()));
   runApp(
     MaterialApp(
