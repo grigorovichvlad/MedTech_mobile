@@ -27,12 +27,10 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
 
   @override
   Future<void> scan() async {
-    // В этой реализации ничего не делаем
   }
 
   @override
   Future<void> stopScan() async {
-    // В этой реализации ничего не делаем
   }
 
   @override
@@ -42,7 +40,7 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
 
 BluetoothDeviceRepository createBluetoothRepository({required bool isTesting}) {
   if (isTesting) {
-    return MockBluetoothDeviceRepository(); // Здесь будет ваш мок-класс
+    return MockBluetoothDeviceRepository();
   } else {
     return BluetoothDeviceRepository(ble: FlutterReactiveBle());
   }
