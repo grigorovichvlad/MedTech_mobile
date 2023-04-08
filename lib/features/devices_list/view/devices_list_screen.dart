@@ -28,7 +28,6 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-//    fun(textTheme.labelSmall);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -53,6 +52,7 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, i){
                 final device = state.devices_list[i];
+                debugPrint(device.name);
                 return DeviceTile(device: device);
               }
             );

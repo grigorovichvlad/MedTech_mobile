@@ -14,7 +14,6 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   Future<List<BluetoothDevice>> scanForDevices() async {
     await scan();
 
-    // Return the list of found devices after the scan is done.
     debugPrint(bluetoothDevices.toString());
     return bluetoothDevices;
   }
@@ -23,7 +22,6 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     const scanDuration = Duration(seconds: 10);
     _startScan();
 
-    // Listen for devices and add them to the list.
     _scanSubscription = ble.statusStream.listen((status) {
       if (status == BleStatus.ready) {
         _startScan().listen((device) {
@@ -38,7 +36,6 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       }
     });
 
-    // Cancel the scan after the given duration.
     await Future.delayed(scanDuration);
     await stopScan();
   }

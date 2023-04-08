@@ -14,8 +14,11 @@ class DeviceTile extends StatelessWidget{
     return ListTile(
       //leading: Image.network(coin.imageURL),
       title: Text(
-          device.name,
-          style: theme.textTheme.bodyMedium
+          device.name.toString(),
+          style:  const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
       ),
       // subtitle: Text(
       //   '${device.id} \$',
