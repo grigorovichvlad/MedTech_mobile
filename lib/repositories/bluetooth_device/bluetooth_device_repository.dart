@@ -9,6 +9,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   final FlutterReactiveBle ble;
   final List<BluetoothDevice> bluetoothDevices = [];
   StreamSubscription? _scanSubscription;
+  late StreamSubscription<ConnectionStateUpdate> _connection;
 
   @override
   Future<List<BluetoothDevice>> scanForDevices() async {
@@ -19,7 +20,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   }
 
   Future<void> scan() async {
-    const scanDuration = Duration(seconds: 10);
+    const scanDuration = Duration(seconds: 4);
     _startScan();
 
     _scanSubscription = ble.statusStream.listen((status) {
@@ -29,6 +30,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
             debugPrint(device.name.toString());
             final bluetoothDevice = BluetoothDevice(
               name: device.name,
+              id: device.id,
             );
             bluetoothDevices.add(bluetoothDevice);
           }
@@ -53,5 +55,18 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   Future<void> stopScan() async {
     await _scanSubscription?.cancel();
     _scanSubscription = null;
+  }
+
+  @override //Не проверял
+  Future<void> connect(String deviceId) {
+    _connection = ble.connectToDevice(id: deviceId).listen(
+      (update)
+      {
+            debugPrint('ConnectionState for device $deviceId : ${update.connectionState}');
+      },
+      onError: (Object e) =>
+          debugPrint('Connecting to device $deviceId resulted in error $e'),
+    );
+    throw UnimplementedError();
   }
 }

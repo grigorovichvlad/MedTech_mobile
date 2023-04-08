@@ -42,7 +42,13 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
           ),
         ),
       ),
-      body:  BlocBuilder<DevicesListBloc, DevicesListState>(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final completer = Completer();
+          _bluetoothDevicesList.add(LoadDevicesList(completer: completer));
+          return completer.future;
+        },
+      child: BlocBuilder<DevicesListBloc, DevicesListState>(
         bloc: _bluetoothDevicesList,
         builder: (context, state) {
           if (state is DevicesListLoaded){
@@ -57,8 +63,12 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
               }
             );
           }
+          if (state is DevicesListLoadingFailure){ //Тут обработаем ошибку, то что блютус отключен.
+
+          }
           return const Center(child: CircularProgressIndicator());
         },
+      ),
       ),
     );
   }

@@ -1,12 +1,15 @@
+import 'package:get_it/get_it.dart';
+import 'package:med_tech_mobile/features/devices_list/bloc/devices_list_bloc.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:flutter/material.dart';
 
 class DeviceTile extends StatelessWidget{
-  const DeviceTile({Key? key,
+   const DeviceTile({Key? key,
    required this.device,
 }) : super(key: key);
 
   final BluetoothDevice device;
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +23,13 @@ class DeviceTile extends StatelessWidget{
             fontWeight: FontWeight.bold,
           ),
       ),
-      // subtitle: Text(
-      //   '${device.id} \$',
-      //   style: theme.textTheme.labelSmall,
-      // ),
-      trailing: const Icon(Icons.arrow_forward_ios),
+      subtitle: Text(
+        device.id.toString(),
+        style: theme.textTheme.labelSmall,
+      ),
+      // trailing: const Icon(Icons.arrow_forward_ios),
       onTap: (){
-        Navigator.of(context).pushNamed(
-          '/device',
-          arguments: device,
-        );
+
       },
     );
   }

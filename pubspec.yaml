@@ -17,6 +17,8 @@ dependencies:
   flutter_bloc: ^8.1.2
   flutter_reactive_ble: ^5.0.3
   get_it: ^7.2.0
+  mockito: ^5.4.0
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
