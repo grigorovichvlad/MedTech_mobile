@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:mockito/mockito.dart';
@@ -31,6 +32,7 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
 
   @override
   Future<void> connect(String? deviceId) {
+    debugPrint('Подключение успешно');
     return Future.value();
   }
 
