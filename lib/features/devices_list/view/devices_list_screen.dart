@@ -15,8 +15,8 @@ class BluetoothDevices extends StatefulWidget {
 }
 
 class _BluetoothDevicesState extends State<BluetoothDevices> {
-
-  final _bluetoothDevicesList = DevicesListBloc(GetIt.I<BluetoothDeviceRepository>());
+  final _bluetoothDevicesList =
+      DevicesListBloc(GetIt.I<BluetoothDeviceRepository>());
 
   @override
   void initState() {
@@ -34,41 +34,39 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Доступные устройства',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: textTheme.headlineLarge,
         ),
       ),
       body: RefreshIndicator(
+        backgroundColor: theme.indicatorColor,
+        color: Colors.white,
         onRefresh: () async {
-          final completer = Completer();
-          _bluetoothDevicesList.add(LoadDevicesList(completer: completer));
-          return completer.future;
+          _bluetoothDevicesList.add(LoadDevicesList());
         },
-      child: BlocBuilder<DevicesListBloc, DevicesListState>(
-        bloc: _bluetoothDevicesList,
-        builder: (context, state) {
-          if (state is DevicesListLoaded){
-            return ListView.separated(
-              padding: EdgeInsets.only(top: 16),
-              itemCount: state.devices_list.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, i){
-                final device = state.devices_list[i];
-                debugPrint(device.name);
-                return DeviceTile(device: device);
-              }
-            );
-          }
-          if (state is DevicesListLoadingFailure){ //Тут обработаем ошибку, то что блютус отключен.
-
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+        child: BlocBuilder<DevicesListBloc, DevicesListState>(
+          bloc: _bluetoothDevicesList,
+          builder: (context, state) {
+            if (state is DevicesListLoaded) {
+              return ListView.separated(
+                  itemCount: state.devicesList.length,
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 0),
+                  itemBuilder: (context, i) {
+                    final device = state.devicesList[i];
+                    return DeviceTile(device: device);
+                  });
+            }
+            if (state is DevicesListLoadingFailure) {
+              //Тут обработаем ошибку, то что блютус отключен.
+              return Center(
+                  child:
+                      Text('Включите Bluetooth', style: textTheme.bodySmall));
+            }
+            return Center(child: CircularProgressIndicator(color: theme.indicatorColor));
+          },
+        ),
       ),
     );
   }

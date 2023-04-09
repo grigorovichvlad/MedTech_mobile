@@ -13,42 +13,46 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
 
   @override
   Future<List<BluetoothDevice>> scanForDevices() async {
-    await scan();
-
-    debugPrint(bluetoothDevices.toString());
-    return bluetoothDevices;
-  }
-
-  Future<void> scan() async {
-    const scanDuration = Duration(seconds: 4);
-    _startScan();
-
-    _scanSubscription = ble.statusStream.listen((status) {
-      if (status == BleStatus.ready) {
-        _startScan().listen((device) {
-          if (device.name.isNotEmpty) {
-            debugPrint(device.name.toString());
-            final bluetoothDevice = BluetoothDevice(
-              name: device.name,
-              id: device.id,
-            );
-            bluetoothDevices.add(bluetoothDevice);
-          }
-        });
+    if (ble.status == BleStatus.poweredOff) {
+      throw Exception('poweredOff');
+    }
+    bluetoothDevices.clear();
+    _scanSubscription?.cancel();
+    _scanSubscription = _startScan().listen((device) {
+      final indexOfDevice =
+          bluetoothDevices.indexWhere((d) => (device.id == d.id));
+      if (indexOfDevice < 0) {
+        final bluetoothDevice = BluetoothDevice(
+          name: device.name,
+          id: device.id,
+        );
+        bluetoothDevices.add(bluetoothDevice);
+      } else {
+        bluetoothDevices[indexOfDevice] =
+            BluetoothDevice(name: device.name, id: device.id);
       }
     });
 
-    await Future.delayed(scanDuration);
-    await stopScan();
+    await Future.delayed(const Duration(seconds: 4), () async {
+      await stopScan();
+    });
+
+    if (ble.status == BleStatus.poweredOff) {
+      throw Exception('poweredOff');
+    }
+
+    return bluetoothDevices;
   }
 
   Stream<DiscoveredDevice> _startScan() {
     const scanMode = ScanMode.lowLatency;
-    const scanForAndroidOnlyServices = false;
     return ble.scanForDevices(
       withServices: [],
       scanMode: scanMode,
     );
+
+
+
   }
 
   @override
@@ -60,9 +64,9 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   @override //Не проверял
   Future<void> connect(String deviceId) {
     _connection = ble.connectToDevice(id: deviceId).listen(
-      (update)
-      {
-            debugPrint('ConnectionState for device $deviceId : ${update.connectionState}');
+      (update) {
+        debugPrint(
+            'ConnectionState for device $deviceId : ${update.connectionState}');
       },
       onError: (Object e) =>
           debugPrint('Connecting to device $deviceId resulted in error $e'),

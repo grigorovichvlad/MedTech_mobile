@@ -4,18 +4,29 @@ final defaultTheme = ThemeData(
   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey),
   useMaterial3: true,
   scaffoldBackgroundColor: Colors.white,
+  indicatorColor: Colors.blue,
   textTheme: const TextTheme(
-    bodyMedium: TextStyle(
+    headlineLarge: TextStyle(
       color: Colors.white,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.bold,
       fontSize: 20,
+    ),
+    bodySmall: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.normal,
+      fontSize: 16,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: 17,
     ),
     labelSmall: TextStyle(
       color: Colors.black,
-      fontWeight: FontWeight.normal,
-      fontSize: 14,
+      fontStyle: FontStyle.italic,
+      fontSize: 16,
     ),
-    headlineLarge: TextStyle(
+    bodyLarge: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
       fontSize: 40,

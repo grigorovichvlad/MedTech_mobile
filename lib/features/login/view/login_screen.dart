@@ -80,7 +80,7 @@ class Login extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
               child: Text(
                 'Вход',
-                style: textTheme.headlineLarge,
+                style: textTheme.bodyLarge,
               ),
             ),
             Row( // "Войти через" кнопки
@@ -94,45 +94,41 @@ class Login extends StatelessWidget {
               ],
             ),
             Padding( // Контейнер с полями для ввода
-              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.2, 30, MediaQuery.of(context).size.width * 0.2, 0),
+              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1, 30, MediaQuery.of(context).size.width * 0.1, 0),
               child: Column(
                 children: <Widget>[
                   Container(
                     height: 50,
-                    child: const TextField(
+                    child: TextField(
+                      style: textTheme.bodySmall,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Введите имя пользователя',
                         labelText: 'Имя пользователя',
-                        labelStyle: TextStyle(
-                          fontStyle: FontStyle.italic,
-                        ),
-                        focusedBorder: OutlineInputBorder(
+                        labelStyle:  textTheme.labelSmall,
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
                       ),
-                      autofocus: false,
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: SizedBox(
                       height: 50,
                       child: TextField(
+                        style: textTheme.bodySmall,
                         obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Colors.blue, width: 2),
                           ),
                           labelText: 'Пароль',
                           hintText: 'Введите пароль',
-                          labelStyle: TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
+                          labelStyle: textTheme.labelSmall,
                         ),
-                        autofocus: false,
                       ),
                     ),
                   ),
@@ -141,7 +137,7 @@ class Login extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.4,
+              width: MediaQuery.of(context).size.width * 0.6,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
@@ -154,15 +150,13 @@ class Login extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     )),
-                child: const Text(
+                child: Text(
                   'Войти',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+                  style: textTheme.headlineLarge,
                 ),
               ),
             ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
