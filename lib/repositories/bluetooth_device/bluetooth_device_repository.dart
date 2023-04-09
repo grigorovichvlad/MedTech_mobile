@@ -84,7 +84,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       },
     );
 
-    return completer.future.timeout(const Duration(seconds: 5), onTimeout: () => throw TimeoutException('Время подключения закончено'));
+    return completer.future.timeout(const Duration(seconds: 10), onTimeout: () => throw TimeoutException('Время подключения закончено'));
   }
 
 
