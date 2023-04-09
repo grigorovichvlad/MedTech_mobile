@@ -55,7 +55,16 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                       const Divider(height: 0),
                   itemBuilder: (context, i) {
                     final device = state.devicesList[i];
-                    return DeviceTile(device: device);
+                    return DeviceTile(device: device, onTap: () {
+                      debugPrint('Подключение к ${device.name}');
+                      if (device.id != null) {
+                        _bluetoothDevicesList.add(ConnectDevice(id: device.id));
+                      } else {
+                        debugPrint('Device ID is null');
+                      }
+
+                    },
+                    );
                   });
             }
             if (state is DevicesListLoadingFailure) {

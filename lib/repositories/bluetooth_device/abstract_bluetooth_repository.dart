@@ -5,5 +5,5 @@ abstract class AbstractBluetoothRepository{
   Future<List<BluetoothDevice>> scanForDevices();
   Future<void> stopScan();
   Stream<DiscoveredDevice> _startScan();
-  Future<void> connect(String deviceId);
+  Future<void> connect(String? deviceId);
 }

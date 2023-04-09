@@ -23,7 +23,14 @@ class DevicesListBloc extends Bloc<DevicesListEvent, DevicesListState> {
       }
     });
 
-  }
+    on<ConnectDevice>((event, emit) async {
+      await devicesRepository.connect(event.id!);
+      emit(DeviceConnecting());
+      return;
+    });
+
+    }
 
   final AbstractBluetoothRepository devicesRepository;
 }
+

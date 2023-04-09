@@ -13,8 +13,13 @@ class LoadDevicesList extends DevicesListEvent{
 }
 
 class ConnectDevice extends DevicesListEvent{
-
+  ConnectDevice({
+    this.completer,
+    this.id,
+  });
+  final Completer? completer;
+  final String? id;
 
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [completer];
 }

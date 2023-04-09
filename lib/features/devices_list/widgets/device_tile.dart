@@ -1,14 +1,14 @@
-//import 'package:med_tech_mobile/features/devices_list/bloc/devices_list_bloc.dart';
+
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:flutter/material.dart';
 
 class DeviceTile extends StatelessWidget{
    const DeviceTile({Key? key,
-   required this.device,
+   required this.device, required this.onTap,
 }) : super(key: key);
 
   final BluetoothDevice device;
-
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,7 @@ class DeviceTile extends StatelessWidget{
         style: textTheme.bodySmall,
       ),
       // trailing: const Icon(Icons.arrow_forward_ios),
-      onTap: (){
-
-      },
+       onTap: onTap,
     );
   }
 }

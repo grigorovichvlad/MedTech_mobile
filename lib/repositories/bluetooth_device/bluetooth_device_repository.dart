@@ -63,16 +63,29 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     _scanSubscription = null;
   }
 
-  @override //Не проверял
-  Future<void> connect(String deviceId) {
-    _connection = ble.connectToDevice(id: deviceId).listen(
-      (update) {
+  @override
+  Future<void> connect(String? deviceId) {
+    final completer = Completer<void>();
+
+    debugPrint('Connecting to $deviceId');
+    _connection = ble.connectToDevice(id: deviceId!).listen(
+          (update) {
         debugPrint(
             'ConnectionState for device $deviceId : ${update.connectionState}');
+        if (update.connectionState == DeviceConnectionState.connected && !completer.isCompleted) {
+          completer.complete();
+        }
       },
-      onError: (Object e) =>
-          debugPrint('Connecting to device $deviceId resulted in error $e'),
+      onError: (Object e) {
+        debugPrint('Connecting to device $deviceId resulted in error $e');
+        if (!completer.isCompleted) {
+          completer.completeError(e);
+        }
+      },
     );
-    throw UnimplementedError();
+
+    return completer.future.timeout(const Duration(seconds: 5), onTimeout: () => throw TimeoutException('Время подключения закончено'));
   }
+
+
 }

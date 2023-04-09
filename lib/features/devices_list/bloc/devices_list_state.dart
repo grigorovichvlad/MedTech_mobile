@@ -28,3 +28,7 @@ class DevicesListLoadingFailure extends DevicesListState {
   List<Object?> get props => [exception];
 }
 
+class DeviceConnecting extends DevicesListState {
+  @override
+  List<Object?> get props => [];
+}

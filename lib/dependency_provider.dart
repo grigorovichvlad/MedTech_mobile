@@ -26,11 +26,12 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
   List<BluetoothDevice> get bluetoothDevices => _bluetoothDevices;
 
   @override
-  Future<void> scan() async {
+  Future<void> stopScan() async {
   }
 
   @override
-  Future<void> stopScan() async {
+  Future<void> connect(String? deviceId) {
+    return Future.value();
   }
 
   @override
