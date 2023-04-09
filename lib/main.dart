@@ -7,9 +7,9 @@ import 'package:med_tech_mobile/router/router.dart';
 import 'dependency_provider.dart';
 
 void main() {
+  final bluetoothRepository = createBluetoothRepository(isTesting: false); // true - test on, false test off
   WidgetsFlutterBinding.ensureInitialized();
-  // final bluetoothRepository = createBluetoothRepository(isTesting: false);
-  GetIt.I.registerSingleton(BluetoothDeviceRepository(ble: FlutterReactiveBle()));
+  GetIt.I.registerSingleton<BluetoothDeviceRepository>(bluetoothRepository);
   runApp(
     MaterialApp(
       theme: defaultTheme,

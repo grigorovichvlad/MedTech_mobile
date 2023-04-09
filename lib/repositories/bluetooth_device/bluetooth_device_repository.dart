@@ -19,17 +19,19 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     bluetoothDevices.clear();
     _scanSubscription?.cancel();
     _scanSubscription = _startScan().listen((device) {
-      final indexOfDevice =
-          bluetoothDevices.indexWhere((d) => (device.id == d.id));
-      if (indexOfDevice < 0) {
-        final bluetoothDevice = BluetoothDevice(
-          name: device.name,
-          id: device.id,
-        );
-        bluetoothDevices.add(bluetoothDevice);
-      } else {
-        bluetoothDevices[indexOfDevice] =
-            BluetoothDevice(name: device.name, id: device.id);
+      if (device.name.toString().isNotEmpty) {
+        final indexOfDevice =
+        bluetoothDevices.indexWhere((d) => (device.id == d.id));
+        if (indexOfDevice < 0) {
+          final bluetoothDevice = BluetoothDevice(
+            name: device.name,
+            id: device.id,
+          );
+          bluetoothDevices.add(bluetoothDevice);
+        } else {
+          bluetoothDevices[indexOfDevice] =
+              BluetoothDevice(name: device.name, id: device.id);
+        }
       }
     });
 
