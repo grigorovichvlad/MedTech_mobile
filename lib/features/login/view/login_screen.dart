@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:med_tech_mobile/features/login/bloc/login_page_bloc.dart';
 import 'dart:ui';
 
+import 'package:med_tech_mobile/features/login/widgets/authForm.dart';
+
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
 
@@ -10,14 +12,6 @@ class Login extends StatelessWidget {
     'assets/images/google.png',
     'assets/images/at.png',
   ];
-
-  final _loginBloc = LoginPageBloc();
-
-  // @override
-  // void initState() {
-  //   //_loginBloc.add(Login());
-  //   //super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +24,18 @@ class Login extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Stack( // Фон с облаками + иконка приложения
+            Stack(
+              // Фон с облаками + иконка приложения
               children: <Widget>[
                 Column(
                   children: <Widget>[
                     SizedBox(
                       height: 200,
                       child: Transform.scale(
-                          alignment: Alignment.bottomCenter,
-                          scale: window.physicalSize.width / 711,
-                          child: Image.asset('assets/images/backround_login.png'),
-                        ),
+                        alignment: Alignment.bottomCenter,
+                        scale: window.physicalSize.width / 711,
+                        child: Image.asset('assets/images/backround_login.png'),
+                      ),
                     ),
                     SizedBox(
                       height: 50,
@@ -52,7 +47,9 @@ class Login extends StatelessWidget {
                 ),
                 Positioned(
                   top: 150,
-                  left: window.physicalSize.width / window.devicePixelRatio / 2 - 50,
+                  left:
+                      window.physicalSize.width / window.devicePixelRatio / 2 -
+                          50,
                   child: SizedBox(
                     width: 100.0,
                     height: 100.0,
@@ -83,7 +80,8 @@ class Login extends StatelessWidget {
                 style: textTheme.bodyLarge,
               ),
             ),
-            Row( // "Войти через" кнопки
+            Row(
+              // "Войти через" кнопки
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 loginViaButton(loginViaImages[0]),
@@ -93,70 +91,12 @@ class Login extends StatelessWidget {
                 loginViaButton(loginViaImages[2]),
               ],
             ),
-            Padding( // Контейнер с полями для ввода
-              padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1, 30, MediaQuery.of(context).size.width * 0.1, 0),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    child: TextField(
-                      style: textTheme.bodySmall,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Введите имя пользователя',
-                        labelText: 'Имя пользователя',
-                        labelStyle:  textTheme.labelSmall,
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue, width: 2),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: SizedBox(
-                      height: 50,
-                      child: TextField(
-                        style: textTheme.bodySmall,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2),
-                          ),
-                          labelText: 'Пароль',
-                          hintText: 'Введите пароль',
-                          labelStyle: textTheme.labelSmall,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            AuthForm(
+              onSubmit: () {
+                Navigator.pushReplacementNamed(context, '/devices');
+              },
             ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  //_loginBloc.add(Login());
-                  Navigator.pushNamed(context, '/devices'); // login
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    )),
-                child: Text(
-                  'Войти',
-                  style: textTheme.headlineLarge,
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.6),
           ],
         ),
       ),

@@ -21,11 +21,12 @@ class DevicesListLoaded extends DevicesListState {
 }
 
 class DevicesListLoadingFailure extends DevicesListState {
-  DevicesListLoadingFailure({required this.exception});
-  final Object? exception;
+  DevicesListLoadingFailure({required this.status, required this.exception});
+  final String exception;
+  final String status;
 
   @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [exception, status];
 }
 
 class DeviceConnecting extends DevicesListState {

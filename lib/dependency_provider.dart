@@ -3,12 +3,13 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:mockito/mockito.dart';
 
+import 'features/devices_list/bloc/devices_list_bloc.dart';
+
 class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepository {
   final List<BluetoothDevice> _bluetoothDevices = [];
 
   @override
-  Future<List<BluetoothDevice>> scanForDevices() async {
-    await Future.delayed(const Duration(seconds: 4));
+  void scanForDevices(DevicesListBloc devicesListBloc) {
     _bluetoothDevices.clear();
     _bluetoothDevices.addAll([
       BluetoothDevice(
@@ -20,14 +21,14 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
         id: 'mac-address 2',
       ),
     ]);
-    return _bluetoothDevices;
+
   }
 
   @override
   List<BluetoothDevice> get bluetoothDevices => _bluetoothDevices;
 
   @override
-  Future<void> stopScan() async {
+  Future<void> _stopScan() async {
   }
 
   @override

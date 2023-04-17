@@ -12,6 +12,23 @@ class LoadDevicesList extends DevicesListEvent{
   List<Object?> get props => [completer];
 }
 
+class LoadingFalure extends DevicesListEvent{
+  LoadingFalure({required this.status, required this.exception});
+  final Exception exception;
+  final BleStatus status;
+
+  @override
+  List<Object?> get props => [exception];
+}
+
+class SetDevicesList extends DevicesListEvent{
+  SetDevicesList(this.devicesList);
+  final List<BluetoothDevice> devicesList;
+
+  @override
+  List<Object?> get props => [completer, devicesList];
+}
+
 class ConnectDevice extends DevicesListEvent{
   ConnectDevice({
     this.completer,
@@ -21,5 +38,5 @@ class ConnectDevice extends DevicesListEvent{
   final String? id;
 
   @override
-  List<Object?> get props => [completer];
+  List<Object?> get props => [completer, id];
 }
