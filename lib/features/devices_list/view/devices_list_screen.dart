@@ -7,6 +7,8 @@ import 'package:med_tech_mobile/features/devices_list/widgets/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'dart:async';
 
+import 'package:permission_handler/permission_handler.dart';
+
 class BluetoothDevices extends StatefulWidget {
   const BluetoothDevices({Key? key}) : super(key: key);
 

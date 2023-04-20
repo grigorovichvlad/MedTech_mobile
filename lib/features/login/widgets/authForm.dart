@@ -17,15 +17,14 @@ class _AuthFormState extends State<AuthForm> {
   final _controllerPassword = TextEditingController();
   final _controllerUsername = TextEditingController();
 
-  String? _errorText(TextEditingController controller) {
-    final text = controller.value.text;
+  String? get _errorText {
+    final username = _controllerUsername.text;
+    final password = _controllerPassword.text;
 
-    if (text.isEmpty) {
-      return 'Can\'t be empty';
-    }
-    if (text.length < 4) {
-      return 'Too short';
-    }
+    // if (endpoinAuth(username, password)) {
+    //
+    // }
+
     // return null if the text is valid
     return null;
   }
@@ -34,6 +33,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   void dispose() {
     _controllerPassword.dispose();
+    _controllerUsername.dispose();
     super.dispose();
   }
 
@@ -41,7 +41,7 @@ class _AuthFormState extends State<AuthForm> {
     // if there is no error text
     if (_errorText == null) {
       // notify the parent widget via the onSubmit callback
-
+      _loginBloc.add(Login(onSubmit: widget.onSubmit));
     }
   }
 
@@ -63,16 +63,23 @@ class _AuthFormState extends State<AuthForm> {
               30, MediaQuery.of(context).size.width * 0.1, 0),
           child: Column(
             children: <Widget>[
-              Container(
-                height: 50,
+              SizedBox(
+                //height: 50,
                 child: TextField(
+                  clipBehavior: Clip.hardEdge,
+
                   controller: _controllerUsername,
+                  onChanged: (_) => setState(() {}),
                   style: textTheme.bodySmall,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     hintText: 'Введите имя пользователя',
                     labelText: 'Имя пользователя',
                     labelStyle: textTheme.labelSmall,
+                    errorText: _errorText,
+                    errorStyle: const TextStyle(
+                        fontSize: 0,
+                    ),
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
@@ -80,11 +87,12 @@ class _AuthFormState extends State<AuthForm> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: SizedBox(
-                  height: 50,
+                  //height: 50,
                   child: TextField(
                     controller: _controllerPassword,
+                    onChanged: (_) => setState(() {}),
                     style: textTheme.bodySmall,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -94,6 +102,7 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                       labelText: 'Пароль',
                       hintText: 'Введите пароль',
+                      errorText: _errorText,
                       labelStyle: textTheme.labelSmall,
                     ),
                   ),
@@ -109,7 +118,8 @@ class _AuthFormState extends State<AuthForm> {
           child: ElevatedButton(
             onPressed: () {
               if (_controllerPassword.value.text.isNotEmpty && _controllerUsername.value.text.isNotEmpty) {
-                _loginBloc.add(Login(onSubmit: widget.onSubmit)); // login
+                 // login
+                _submit();
               } else {
                 null;
               }
