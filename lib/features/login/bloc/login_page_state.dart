@@ -6,6 +6,8 @@ class LoginPageInitial extends LoginPageState {}
 
 class LoginPageLoading extends LoginPageState {}
 
+class LoginButtonLoading extends LoginPageState {}
+
 class LoginPageLoginRight extends LoginPageState { // если логин валид
 
 

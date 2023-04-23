@@ -73,21 +73,19 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                   });
             }
             if (state is DevicesListLoadingFailure) {
-              //Тут обработаем ошибку, то что блютус отключен.
-              return
-                  Center(
-                    child: ListView.builder(
-                      itemCount: 1,
-                      itemBuilder: (context, i) {
-                        return Column(
-                          children: [
-                            Text('Status: ${state.status}', style: textTheme.bodySmall),
-                            Text(state.exception.toString(), style: textTheme.bodySmall),
-                          ],
-                        );
-                      },
-                    ),
-                  );
+              //Тут обработаем любую ошибку блютуза.
+              return ListView(
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Text('Status: ${state.status}',
+                          style: textTheme.bodySmall),
+                      Text(state.exception.toString(),
+                          style: textTheme.bodySmall),
+                    ],
+                  ),
+                ],
+              );
             }
             return Center(
                 child: CircularProgressIndicator(color: theme.indicatorColor));
