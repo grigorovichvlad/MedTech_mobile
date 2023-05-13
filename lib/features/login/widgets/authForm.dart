@@ -17,7 +17,7 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _controllerPassword =
-      TextEditingController(); //дают возможность получить текст из текстового поля
+  TextEditingController(); //дают возможность получить данные из текстового поля
   final _controllerUsername = TextEditingController();
 
   String? get _errorText {
@@ -57,8 +57,14 @@ class _AuthFormState extends State<AuthForm> {
       children: <Widget>[
         Padding(
           // Контейнер с полями для ввода
-          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1,
-              30, MediaQuery.of(context).size.width * 0.1, 0),
+          padding: EdgeInsets.fromLTRB(MediaQuery
+              .of(context)
+              .size
+              .width * 0.1,
+              30, MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.1, 0),
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -120,7 +126,10 @@ class _AuthFormState extends State<AuthForm> {
               }
               if (state is LoginPageInitial) {
                 return SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.6,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
@@ -150,9 +159,5 @@ class _AuthFormState extends State<AuthForm> {
         const SizedBox(height: 30),
       ],
     );
-
-    //   return Center(
-    //       child: CircularProgressIndicator(color: theme.indicatorColor));
-    // });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 
@@ -64,7 +65,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   }
 
   Stream<DiscoveredDevice> _startScan() {
-    const scanMode = ScanMode.balanced;
+    const scanMode = ScanMode.lowLatency;
     return ble.scanForDevices(
       withServices: [],
       scanMode: scanMode,

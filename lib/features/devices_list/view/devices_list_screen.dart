@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/features/devices_list/widgets/device_tile.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:med_tech_mobile/features/devices_list/bloc/devices_list_bloc.dart';
@@ -46,7 +47,9 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
         color: Colors.white,
         onRefresh: () async {
           _bluetoothDevicesList.add(LoadDevicesList());
+          // await Future.delayed(const Duration(seconds: 4));
         },
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: BlocBuilder<DevicesListBloc, DevicesListState>(
           bloc: _bluetoothDevicesList,
           builder: (context, state) {
@@ -72,21 +75,80 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                     );
                   });
             }
+
             if (state is DevicesListLoadingFailure) {
-              //Тут обработаем любую ошибку блютуза.
-              return ListView(
-                children: <Widget>[
-                  Column(
-                    children: [
-                      Text('Status: ${state.status}',
-                          style: textTheme.bodySmall),
-                      Text(state.exception.toString(),
-                          style: textTheme.bodySmall),
-                    ],
-                  ),
-                ],
+              var bleException = state.exception;
+              bleException = bleException.substring(
+                  bleException.indexOf("message: \"") + 10,
+                  bleException.toString().lastIndexOf("\""));
+              var exceptionCode = bleException.substring(
+                  bleException.indexOf("(code ") + 6,
+                  bleException.toString().indexOf(")"));
+
+
+              switch (exceptionCode) { //Тут обработаем любую ошибку блютуза.
+                case '1': //BLE powerOff
+                  bleException = 'Включите Bluetooth';
+                  break;
+                case '3': //Location permissions missing
+                  bleException =  'Необходимо разрешение\n\"Устройства поблизости\"';
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          bleException,
+                          style: textTheme.bodySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        FilledButton.tonal(
+                          onPressed: () async {
+                            await openAppSettings();
+                            _bluetoothDevicesList.add(LoadDevicesList());
+                          },
+                          style: FilledButton.styleFrom(
+                              backgroundColor: Colors.blue[300],
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0)
+                          ),
+                          child: Text("Открыть настройки", style: textTheme.titleSmall),
+                        ),
+                      ],
+                    ),
+                  );
+                  break;
+                case '2147483646': //Throttle
+                  bleException = 'Слишком быстро.\nПовторите позже.';
+                  break;
+                default:
+                  break;
+              }
+
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      bleException,
+                      style: textTheme.bodySmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    FilledButton.tonal(
+                      onPressed: () {
+                        _bluetoothDevicesList.add(LoadDevicesList());
+                      },
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Colors.blue[300],
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0)
+                      ),
+                      child: Text("Обновить", style: textTheme.titleSmall),
+                    ),
+                  ],
+                ),
               );
             }
+
             return Center(
                 child: CircularProgressIndicator(color: theme.indicatorColor));
           },

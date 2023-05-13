@@ -13,12 +13,13 @@ class LoadDevicesList extends DevicesListEvent{
 }
 
 class LoadingFalure extends DevicesListEvent{
+
   LoadingFalure({required this.status, required this.exception});
   final Exception exception;
   final BleStatus status;
 
   @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [exception, status];
 }
 
 class SetDevicesList extends DevicesListEvent{

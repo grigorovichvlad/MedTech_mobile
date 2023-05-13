@@ -14,7 +14,7 @@ final defaultTheme = ThemeData(
     bodySmall: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.normal,
-      fontSize: 16,
+      fontSize: 18,
     ),
     bodyMedium: TextStyle(
       color: Colors.black,
@@ -25,6 +25,11 @@ final defaultTheme = ThemeData(
       color: Colors.black,
       fontStyle: FontStyle.italic,
       fontSize: 16,
+    ),
+    titleSmall: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.normal,
+      fontSize: 13,
     ),
     bodyLarge: TextStyle(
       color: Colors.black,
