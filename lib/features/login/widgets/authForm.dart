@@ -17,21 +17,24 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _controllerPassword =
-  TextEditingController(); //дают возможность получить данные из текстового поля
+      TextEditingController(); //дают возможность получить данные из текстового поля
   final _controllerUsername = TextEditingController();
+  bool isErrorText = false;
 
   String? get _errorText {
-    final username = _controllerUsername.text;
-    final password = _controllerPassword.text;
-
     //TODO: CleanFormat
-    // if (!CleanFormat) {
-    //  return 'bad format';
-    // }
+    if (isErrorText) {
+      return '- Поля не должны быть пустыми';
+    }
     return null;
   }
 
   void _submit() {
+    final username = _controllerUsername.text;
+    final password = _controllerPassword.text;
+
+    isErrorText = password.isEmpty || username.isEmpty;
+
     if (_errorText == null) {
       // if there is no error text
       widget.loginBloc.add(ButtonLoginPressed(
@@ -57,57 +60,53 @@ class _AuthFormState extends State<AuthForm> {
       children: <Widget>[
         Padding(
           // Контейнер с полями для ввода
-          padding: EdgeInsets.fromLTRB(MediaQuery
-              .of(context)
-              .size
-              .width * 0.1,
-              30, MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.1, 0),
+          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1,
+              30, MediaQuery.of(context).size.width * 0.1, 0),
           child: Column(
             children: <Widget>[
-              SizedBox(
-                //height: 50,
-                child: TextField(
-                  clipBehavior: Clip.hardEdge,
-                  controller: _controllerUsername,
-                  onChanged: (_) => setState(() {}),
-                  style: textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    hintText: 'Введите имя пользователя',
-                    labelText: 'Имя пользователя',
-                    labelStyle: textTheme.labelSmall,
-                    errorText: _errorText,
-                    errorStyle: const TextStyle(
-                      fontSize: 0,
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
-                    ),
+              TextField(
+                clipBehavior: Clip.hardEdge,
+                controller: _controllerUsername,
+                onChanged: (_) => setState(() {isErrorText = false;}),
+                style: textTheme.bodySmall,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 10.0),
+                  border: const OutlineInputBorder(),
+                  hintText: 'Введите имя пользователя',
+                  labelText: 'Имя пользователя',
+                  labelStyle: textTheme.labelSmall,
+                  errorText: _errorText,
+                  errorStyle: const TextStyle(
+                    fontSize: 0,
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 2),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: SizedBox(
-                  //height: 50,
-                  child: TextField(
-                    controller: _controllerPassword,
-                    onChanged: (_) => setState(() {}),
-                    style: textTheme.bodySmall,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 2),
-                      ),
-                      labelText: 'Пароль',
-                      hintText: 'Введите пароль',
-                      errorText: _errorText,
-                      labelStyle: textTheme.labelSmall,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: TextField(
+                  controller: _controllerPassword,
+                  onChanged: (_) => setState(() {isErrorText = false;}),
+                  style: textTheme.bodySmall,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 10.0),
+                    border: const OutlineInputBorder(),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
+                    labelText: 'Пароль',
+                    hintText: 'Введите пароль',
+                    errorText: _errorText,
+                    errorStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    labelStyle: textTheme.labelSmall,
                   ),
                 ),
               ),
@@ -126,20 +125,13 @@ class _AuthFormState extends State<AuthForm> {
               }
               if (state is LoginPageInitial) {
                 return SizedBox(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_controllerPassword.value.text.isNotEmpty &&
-                          _controllerUsername.value.text.isNotEmpty) {
-                        // loginx
+                      setState(() {
                         _submit();
-                      } else {
-                        null;
-                      }
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
