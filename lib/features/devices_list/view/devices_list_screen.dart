@@ -10,6 +10,9 @@ import 'dart:async';
 
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../repositories/local_data_base/local_db_repository.dart';
+import '../../widgets/exit_button.dart';
+
 class BluetoothDevices extends StatefulWidget {
   const BluetoothDevices({Key? key}) : super(key: key);
 
@@ -34,13 +37,15 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         centerTitle: true,
         title: Text(
           'Доступные устройства',
           style: textTheme.headlineLarge,
         ),
+        actions: [
+          const ExitButton().build(context),
+        ],
       ),
       body: RefreshIndicator(
         backgroundColor: theme.indicatorColor,
@@ -65,12 +70,17 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                       device: device,
                       onTap: () {
                         debugPrint('Подключение к ${device.name}');
-                        if (device.id != null) {
-                          _bluetoothDevicesList
-                              .add(ConnectDevice(id: device.id));
-                        } else {
-                          debugPrint('Device ID is null');
-                        }
+                        _bluetoothDevicesList.add(ConnectDevice(
+                            id: device.id,
+                            onSubmit: () async {
+                              var isNeedRefresh =
+                                  await Navigator.pushReplacementNamed(
+                                      context, '/status');
+                              if (isNeedRefresh == true ||
+                                  isNeedRefresh == null) {
+                                _bluetoothDevicesList.add(LoadDevicesList());
+                              }
+                            }));
                       },
                     );
                   });
@@ -85,13 +95,14 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                   bleException.indexOf("(code ") + 6,
                   bleException.toString().indexOf(")"));
 
-
-              switch (exceptionCode) { //Тут обработаем любую ошибку блютуза.
+              switch (exceptionCode) {
+                //Тут обработаем любую ошибку блютуза.
                 case '1': //BLE powerOff
                   bleException = 'Включите Bluetooth';
                   break;
                 case '3': //Location permissions missing
-                  bleException =  'Необходимо разрешение\n\"Устройства поблизости\"';
+                  bleException =
+                      'Необходимо разрешение\n\"Устройства поблизости\"';
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -104,14 +115,15 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                         const SizedBox(height: 10),
                         FilledButton.tonal(
                           onPressed: () async {
-                            await openAppSettings();
+                            while (await openAppSettings() ==
+                                false) {} //точно откроет настройки
                             _bluetoothDevicesList.add(LoadDevicesList());
                           },
                           style: FilledButton.styleFrom(
-                              backgroundColor: Colors.blue[300],
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0)
-                          ),
-                          child: Text("Открыть настройки", style: textTheme.titleSmall),
+                              backgroundColor: Colors.blue[400],
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0)),
+                          child: Text("Открыть настройки",
+                              style: textTheme.titleSmall),
                         ),
                       ],
                     ),
@@ -139,15 +151,15 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                         _bluetoothDevicesList.add(LoadDevicesList());
                       },
                       style: FilledButton.styleFrom(
-                          backgroundColor: Colors.blue[300],
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0)
-                      ),
+                          backgroundColor: Colors.blue[400],
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0)),
                       child: Text("Обновить", style: textTheme.titleSmall),
                     ),
                   ],
                 ),
               );
             }
+            if (state is DeviceConnecting) {}
 
             return Center(
                 child: CircularProgressIndicator(color: theme.indicatorColor));

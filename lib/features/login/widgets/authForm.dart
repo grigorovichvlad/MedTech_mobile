@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:med_tech_mobile/repositories/local_data_base/local_db_repository.dart';
 
 import '../bloc/login_page_bloc.dart';
 
@@ -67,7 +65,9 @@ class _AuthFormState extends State<AuthForm> {
               TextField(
                 clipBehavior: Clip.hardEdge,
                 controller: _controllerUsername,
-                onChanged: (_) => setState(() {isErrorText = false;}),
+                onChanged: (_) => setState(() {
+                  isErrorText = false;
+                }),
                 style: textTheme.bodySmall,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
@@ -89,7 +89,9 @@ class _AuthFormState extends State<AuthForm> {
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 child: TextField(
                   controller: _controllerPassword,
-                  onChanged: (_) => setState(() {isErrorText = false;}),
+                  onChanged: (_) => setState(() {
+                    isErrorText = false;
+                  }),
                   style: textTheme.bodySmall,
                   obscureText: true,
                   decoration: InputDecoration(

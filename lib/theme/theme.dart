@@ -28,7 +28,7 @@ final defaultTheme = ThemeData(
     ),
     titleSmall: TextStyle(
       color: Colors.white,
-      fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.bold,
       fontSize: 13,
     ),
     bodyLarge: TextStyle(

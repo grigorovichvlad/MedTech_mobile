@@ -21,14 +21,14 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
         id: 'mac-address 2',
       ),
     ]);
-
+    devicesListBloc.add(SetDevicesList(bluetoothDevices));
   }
 
   @override
   List<BluetoothDevice> get bluetoothDevices => _bluetoothDevices;
 
   @override
-  Future<void> _stopScan() async {
+  Future<void> stopScan() async {
   }
 
   @override

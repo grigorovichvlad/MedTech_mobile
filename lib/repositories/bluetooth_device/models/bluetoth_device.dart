@@ -5,5 +5,5 @@ class BluetoothDevice {
   });
 
   final String name;
-  final String? id;
+  final String id;
 }

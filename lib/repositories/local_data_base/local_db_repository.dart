@@ -3,7 +3,6 @@ import 'package:med_tech_mobile/repositories/local_data_base/models/controller_d
 import 'package:med_tech_mobile/repositories/local_data_base/models/user_data.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class LocalDBRepository {
   late Future<Isar> db;
 
@@ -11,10 +10,11 @@ class LocalDBRepository {
     db = _openDB();
   }
 
-  Future<Isar> _openDB() async{
+  Future<Isar> _openDB() async {
     if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();
-      return await Isar.open([UserDataSchema, ControllerDataSchema], directory: dir.path, inspector: true);
+      return await Isar.open([UserDataSchema, ControllerDataSchema],
+          directory: dir.path, inspector: true);
     }
     return Future.value(Isar.getInstance());
   }
@@ -22,8 +22,14 @@ class LocalDBRepository {
   Future<void> updateUserData(String username, String password) async {
     final isar = await db;
     final data = UserData(username: username, password: password);
-    isar.writeTxnSync<int>(() =>
-        isar.userDatas.putSync(data));
+    isar.writeTxnSync<int>(() => isar.userDatas.putSync(data));
+  }
+
+  Future<void> deleteUserData() async {
+    final isar = await db;
+    isar.writeTxnSync<bool>(() => isar.userDatas.deleteSync(1));
+    //TODO: Delete the token
+    //TODO: Add Controller Data Erasing
   }
 
   Future<List<String?>> readUsernamePassword() async {
@@ -31,5 +37,4 @@ class LocalDBRepository {
     final userData = await isar.userDatas.get(1);
     return [userData?.username, userData?.password];
   }
-
 }

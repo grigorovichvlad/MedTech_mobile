@@ -13,7 +13,6 @@ class LoadDevicesList extends DevicesListEvent{
 }
 
 class LoadingFalure extends DevicesListEvent{
-
   LoadingFalure({required this.status, required this.exception});
   final Exception exception;
   final BleStatus status;
@@ -33,10 +32,12 @@ class SetDevicesList extends DevicesListEvent{
 class ConnectDevice extends DevicesListEvent{
   ConnectDevice({
     this.completer,
-    this.id,
+    required this.id,
+    required this.onSubmit,
   });
   final Completer? completer;
-  final String? id;
+  final String id;
+  final Function onSubmit;
 
   @override
   List<Object?> get props => [completer, id];
