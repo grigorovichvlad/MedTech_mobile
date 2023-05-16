@@ -21,14 +21,14 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     _scanSubscription = _startScan().listen((device) {
       final indexOfDevice =
           bluetoothDevices.indexWhere((d) => (device.id == d.id));
-      if (indexOfDevice < 0) {
+      if (indexOfDevice < 0 && device.name.isNotEmpty){  // проверяем, что имя устройства не пустое
         final bluetoothDevice = BluetoothDevice(
           name: device.name,
           id: device.id,
         );
         bluetoothDevices.add(bluetoothDevice);
         devicesListBloc.add(SetDevicesList(bluetoothDevices));
-      } else {
+      } else if (device.name.isNotEmpty) {  // проверяем, что имя устройства не пустое
         bluetoothDevices[indexOfDevice] =
             BluetoothDevice(name: device.name, id: device.id);
       }

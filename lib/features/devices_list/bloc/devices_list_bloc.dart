@@ -48,7 +48,7 @@ class DevicesListBloc extends Bloc<DevicesListEvent, DevicesListState> {
 
     on<ConnectDevice>((event, emit) async {
       await devicesRepository.stopScan();
-      //await devicesRepository.connect(event.id!);
+      await devicesRepository.connect(event.id!);
       emit(DeviceConnecting());
       await event.onSubmit();
       event.completer?.complete();
