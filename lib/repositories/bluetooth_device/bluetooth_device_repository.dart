@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
-
+import 'package:flutter/foundation.dart';
 import '../../features/devices_list/bloc/devices_list_bloc.dart';
 
 class BluetoothDeviceRepository implements AbstractBluetoothRepository {
@@ -13,13 +13,16 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   final List<BluetoothDevice> bluetoothDevices = [];
 
   @override
-  void scanForDevices(DevicesListBloc devicesListBloc) {
+  void scanForDevices(DevicesListBloc devicesListBloc) async {
     bluetoothDevices.clear();
     bluePlus.scanResults.listen((List<ScanResult> results) {
       for (ScanResult result in results) {
         BluetoothDevice device = result.device;
         final indexOfDevice =
         bluetoothDevices.indexWhere((d) => (device.id == d.id));
+
+        debugPrint('Found device: ${device.name}, id: ${device.id}'); // Debug print
+
         if (indexOfDevice < 0 && device.name.isNotEmpty) {
           final bluetoothDevice = BluetoothDeviceMy(
             name: device.name,
@@ -27,17 +30,24 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
           );
           bluetoothDevices.add(bluetoothDevice as BluetoothDevice);
           devicesListBloc.add(SetDevicesList(bluetoothDevice as List<BluetoothDeviceMy>));
-        } else if (device.name.isNotEmpty) {
+
+          debugPrint('New device added to the list: ${bluetoothDevice.name}, id: ${bluetoothDevice.id}'); // Debug print
+        }
+        else if (device.name.isNotEmpty) {
           bluetoothDevices[indexOfDevice] =
           BluetoothDeviceMy(name: device.name, id: device.id.toString()) as BluetoothDevice;
+
+          debugPrint('Device updated in the list: ${device.name}, id: ${device.id}'); // Debug print
         }
       }
     }, onError: (error)
     {
       devicesListBloc.add(LoadingFalure(status: BluetoothState.off, exception: error));
+      debugPrint('Error occurred during scan: $error'); // Debug print
     });
 
     bluePlus.startScan();
+    debugPrint('Started Bluetooth scan...'); // Debug print
   }
 
   @override

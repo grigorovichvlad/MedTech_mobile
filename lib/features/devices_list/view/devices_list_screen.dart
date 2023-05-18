@@ -52,7 +52,7 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
         color: Colors.white,
         onRefresh: () async {
           _bluetoothDevicesList.add(LoadDevicesList());
-          // await Future.delayed(const Duration(seconds: 4));
+          await Future.delayed(const Duration(seconds: 4));
         },
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: BlocBuilder<DevicesListBloc, DevicesListState>(
