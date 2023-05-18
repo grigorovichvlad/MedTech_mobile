@@ -85,9 +85,9 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       });
     });
 
-    bluetooth.startScan(timeout: Duration(seconds: 10));
+    bluetooth.startScan(timeout: const Duration(seconds: 4));
 
-    Future.delayed(Duration(seconds: 10), () async {
+    Future.delayed(const Duration(seconds: 4), () async {
       await bluetooth.stopScan();
       scanResultController.close();
     });
