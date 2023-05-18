@@ -1,5 +1,5 @@
-class BluetoothDevice {
-  BluetoothDevice({
+class MedTechDevice {
+  MedTechDevice({
     required this.name,
     required this.id,
   });
