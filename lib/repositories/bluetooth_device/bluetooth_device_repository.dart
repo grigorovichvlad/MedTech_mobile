@@ -1,80 +1,57 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 
 import '../../features/devices_list/bloc/devices_list_bloc.dart';
 
 class BluetoothDeviceRepository implements AbstractBluetoothRepository {
-  BluetoothDeviceRepository({required this.ble});
+  BluetoothDeviceRepository({required this.bluePlus});
 
-  final FlutterReactiveBle ble;
+  final FlutterBluePlus bluePlus;
   final List<BluetoothDevice> bluetoothDevices = [];
-  StreamSubscription? _scanSubscription;
-  late StreamSubscription<ConnectionStateUpdate> _connection;
 
   @override
   void scanForDevices(DevicesListBloc devicesListBloc) {
     bluetoothDevices.clear();
-    _scanSubscription?.cancel();
-    _scanSubscription = _startScan().listen((device) {
-      final indexOfDevice =
-          bluetoothDevices.indexWhere((d) => (device.id == d.id));
-      if (indexOfDevice < 0 && device.name.isNotEmpty){  // проверяем, что имя устройства не пустое
-        final bluetoothDevice = BluetoothDevice(
-          name: device.name,
-          id: device.id,
-        );
-        bluetoothDevices.add(bluetoothDevice);
-        devicesListBloc.add(SetDevicesList(bluetoothDevices));
-      } else if (device.name.isNotEmpty) {  // проверяем, что имя устройства не пустое
-        bluetoothDevices[indexOfDevice] =
-            BluetoothDevice(name: device.name, id: device.id);
+    bluePlus.scanResults.listen((List<ScanResult> results) {
+      for (ScanResult result in results) {
+        BluetoothDevice device = result.device;
+        final indexOfDevice =
+        bluetoothDevices.indexWhere((d) => (device.id == d.id));
+        if (indexOfDevice < 0 && device.name.isNotEmpty) {
+          final bluetoothDevice = BluetoothDeviceMy(
+            name: device.name,
+            id: device.id.toString(),
+          );
+          bluetoothDevices.add(bluetoothDevice as BluetoothDevice);
+          devicesListBloc.add(SetDevicesList(bluetoothDevice as List<BluetoothDeviceMy>));
+        } else if (device.name.isNotEmpty) {
+          bluetoothDevices[indexOfDevice] =
+          BluetoothDeviceMy(name: device.name, id: device.id.toString()) as BluetoothDevice;
+        }
       }
     }, onError: (error)
     {
-      devicesListBloc.add(LoadingFalure(status: ble.status, exception: error));
+      devicesListBloc.add(LoadingFalure(status: BluetoothState.off, exception: error));
     });
+
+    bluePlus.startScan();
   }
 
   @override
-  Future<void> connect(String? deviceId) {
-    final completer = Completer<void>();
-
+  Future<void> connect(String? deviceId) async {
     debugPrint('Connecting to $deviceId');
-    _connection = ble.connectToDevice(id: deviceId!).listen(
-      (update) {
-        debugPrint(
-            'ConnectionState for device $deviceId : ${update.connectionState}');
-        if (update.connectionState == DeviceConnectionState.connected &&
-            !completer.isCompleted) {
-          completer.complete();
-        }
-      },
-      onError: (Object e) {
-        debugPrint('Connecting to device $deviceId resulted in error $e');
-        if (!completer.isCompleted) {
-          completer.completeError(e);
-        }
-      },
-    );
-
-    return completer.future.timeout(const Duration(seconds: 10),
+    List<BluetoothDevice> connectedDevices = await bluePlus.connectedDevices;
+    BluetoothDevice device = connectedDevices.firstWhere((device) => device.id.toString() == deviceId);
+    await device.connect(autoConnect: false).timeout(const Duration(seconds: 10),
         onTimeout: () => throw TimeoutException('Время подключения закончено'));
-  }
-
-  Stream<DiscoveredDevice> _startScan() {
-    const scanMode = ScanMode.lowLatency;
-    return ble.scanForDevices(
-      withServices: [],
-      scanMode: scanMode,
-    );
   }
 
   @override
   Future<void> stopScan() async {
-    await _scanSubscription?.cancel();
-    _scanSubscription = null;
+    await bluePlus.stopScan();
   }
 }
+

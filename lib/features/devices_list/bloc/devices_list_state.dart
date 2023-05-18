@@ -14,7 +14,7 @@ class DevicesListLoading extends DevicesListState {
 
 class DevicesListLoaded extends DevicesListState {
   DevicesListLoaded({required this.devicesList});
-  final List<BluetoothDevice> devicesList;
+  final List<BluetoothDeviceMy> devicesList;
 
   @override
   List<Object?> get props => [devicesList];

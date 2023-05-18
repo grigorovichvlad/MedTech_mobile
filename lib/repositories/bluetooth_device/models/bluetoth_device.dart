@@ -1,5 +1,5 @@
-class BluetoothDevice {
-  BluetoothDevice({
+class BluetoothDeviceMy {
+  BluetoothDeviceMy({
     required this.name,
     required this.id,
   });
