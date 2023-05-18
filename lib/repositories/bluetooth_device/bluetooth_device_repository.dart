@@ -8,7 +8,7 @@ import '../../features/devices_list/bloc/devices_list_bloc.dart';
 
 class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   BluetoothDeviceRepository({required this.bluetooth});
-//oerdkijnfkwef
+
   final FlutterBluePlus bluetooth;
   final List<MedTechDevice> bluetoothDevices = [];
   StreamSubscription? _scanSubscription;
@@ -24,7 +24,8 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       debugPrint('scanForDevices: Discovered ${device.name} (${device.id.id})');
       final indexOfDevice =
       bluetoothDevices.indexWhere((d) => (device.id.id == d.id));
-      if (indexOfDevice < 0 && device.name.isNotEmpty) {
+      if (indexOfDevice < 0) {
+        // if (indexOfDevice < 0 && device.name.isNotEmpty) {
         debugPrint('scanForDevices: Adding new device ${device.name}');
         final medTechDevice = MedTechDevice(
           name: device.name,

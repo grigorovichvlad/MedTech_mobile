@@ -9,8 +9,8 @@ import 'dependency_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  //final bluetoothRepository = createBluetoothRepository(isTesting: false); // true - test on, false test off
-  GetIt.I.registerSingleton<BluetoothDeviceRepository>(BluetoothDeviceRepository(bluetooth: FlutterBluePlus.instance));
+  final bluetoothRepository = createBluetoothRepository(isTesting: false); // true - test on, false test off
+  GetIt.I.registerSingleton<BluetoothDeviceRepository>(bluetoothRepository /*BluetoothDeviceRepository(bluetooth: FlutterBluePlus.instance)*/);
   runApp(
     MaterialApp(
       theme: defaultTheme,
