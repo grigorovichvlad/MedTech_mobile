@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:mockito/mockito.dart';
 
@@ -38,7 +38,7 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
   }
 
   @override
-  FlutterBluePlus get bluetooth => throw UnimplementedError();
+  FlutterBluetoothSerial get bluetooth => throw UnimplementedError();
 }
 
 
@@ -46,6 +46,6 @@ BluetoothDeviceRepository createBluetoothRepository({required bool isTesting}) {
   if (isTesting) {
     return MockBluetoothDeviceRepository();
   } else {
-    return BluetoothDeviceRepository(bluetooth: FlutterBluePlus.instance);
+    return BluetoothDeviceRepository(bluetooth: FlutterBluetoothSerial.instance);
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 
 import '../../features/devices_list/bloc/devices_list_bloc.dart';
@@ -9,10 +8,10 @@ import '../../features/devices_list/bloc/devices_list_bloc.dart';
 class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   BluetoothDeviceRepository({required this.bluetooth});
 
-  final FlutterBluePlus bluetooth;
+  final FlutterBluetoothSerial bluetooth;
   final List<MedTechDevice> bluetoothDevices = [];
   StreamSubscription? _scanSubscription;
-  late StreamSubscription<BluetoothDeviceState> _connection;
+  Future<BluetoothConnection>? _connection;
 
   @override
   void scanForDevices(DevicesListBloc devicesListBloc) {
@@ -21,85 +20,68 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     _scanSubscription?.cancel();
     _scanSubscription = _startScan().listen((result) {
       BluetoothDevice device = result.device;
-      debugPrint('scanForDevices: Discovered ${device.name} (${device.id.id})');
-      final indexOfDevice =
-      bluetoothDevices.indexWhere((d) => (device.id.id == d.id));
-    //  if (indexOfDevice < 0) {
-      if (indexOfDevice < 0 && device.name.isNotEmpty) {
+      debugPrint('scanForDevices: Discovered ${device.name} (${device.address})');
+      final indexOfDevice = bluetoothDevices.indexWhere((d) => (device.address == d.id));
+      if (indexOfDevice < 0 && device.name != null && device.name!.isNotEmpty) {
         debugPrint('scanForDevices: Adding new device ${device.name}');
         final medTechDevice = MedTechDevice(
-          name: device.name,
-          id: device.id.id,
+          name: device.name ?? '',
+          id: device.address,
         );
         bluetoothDevices.add(medTechDevice);
         devicesListBloc.add(SetDevicesList(bluetoothDevices));
-      } else if (device.name.isNotEmpty) {
+      } else if (device.name != null && device.name!.isNotEmpty) {
         debugPrint('scanForDevices: Updating existing device ${device.name}');
-        bluetoothDevices[indexOfDevice] =
-            MedTechDevice(name: device.name, id: device.id.id);
+        bluetoothDevices[indexOfDevice] = MedTechDevice(name: device.name ?? '', id: device.address);
       }
-    }, onError: (error) {
+    }, onError: (error) async {
       debugPrint('scanForDevices: An error occurred - $error');
-      devicesListBloc.add(LoadingFalure(exception: error, status: BluetoothState.off));
+      BluetoothState currentState = await FlutterBluetoothSerial.instance.state;
+      devicesListBloc.add(LoadingFalure(exception: error, status: currentState));
     });
   }
-
 
   @override
   Future<void> connect(String? deviceId) async {
-    final completer = Completer<void>();
-    debugPrint('Connecting to $deviceId');
-
-    try {
-      var scanResult = await bluetooth.startScan(
-        withServices: [],
-        timeout: Duration(seconds: 10),
-      );
-      var device = scanResult.firstWhere((r) => r.device.id.toString() == deviceId);
-      await device.device.connect();
-      _connection = device.device.state.listen((BluetoothDeviceState state) {
-        debugPrint('ConnectionState for device $deviceId : $state');
-        if (state == BluetoothDeviceState.connected && !completer.isCompleted) {
-          completer.complete();
-        }
-      });
-    } catch (e) {
-      debugPrint('Connecting to device $deviceId resulted in error $e');
-      if (!completer.isCompleted) {
-        completer.completeError(e);
-      }
-    }
-
-    return completer.future.timeout(const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Connection timeout'));
+    // final completer = Completer<void>();
+    //
+    // // Handle the possibility that deviceId could be null
+    // if (deviceId == null) {
+    //   debugPrint('DeviceId is null');
+    //   completer.completeError(Exception('DeviceId is null'));
+    //   return completer.future;
+    // }
+    //
+    // debugPrint('Connecting to $deviceId');
+    //
+    // try {
+    //   _connection = FlutterBluetoothSerial.instance.connect(BluetoothDevice(address: deviceId)) as Future<BluetoothConnection>?;
+    //   await _connection?.then((connection) {
+    //     debugPrint('Connected to the device');
+    //     completer.complete();
+    //   }).catchError((error) {
+    //     debugPrint('Cannot connect, exception occurred');
+    //     debugPrint(error.toString());
+    //     completer.completeError(error);
+    //   });
+    // } catch (e) {
+    //   debugPrint('Connecting to device $deviceId resulted in error $e');
+    //   if (!completer.isCompleted) {
+    //     completer.completeError(e);
+    //   }
+    // }
+    //
+    // return completer.future.timeout(const Duration(seconds: 10),
+    //     onTimeout: () => throw TimeoutException('Connection timeout'));
   }
 
-
-
-  Stream<ScanResult> _startScan() {
-    StreamController<ScanResult> scanResultController = StreamController<ScanResult>();
-
-    bluetooth.scanResults.listen((List<ScanResult> results) {
-      results.forEach((result) {
-        scanResultController.add(result);
-      });
-    });
-
-    bluetooth.startScan(timeout: const Duration(seconds: 4));
-
-    Future.delayed(const Duration(seconds: 4), () async {
-      await bluetooth.stopScan();
-      scanResultController.close();
-    });
-
-    return scanResultController.stream;
+  Stream<BluetoothDiscoveryResult> _startScan() {
+    return bluetooth.startDiscovery();
   }
-
-
 
   @override
   Future<void> stopScan() async {
-    await bluetooth.stopScan();
+    await bluetooth.cancelDiscovery();
     _scanSubscription?.cancel();
     _scanSubscription = null;
   }

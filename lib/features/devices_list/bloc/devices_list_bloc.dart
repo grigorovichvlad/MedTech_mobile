@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -43,7 +43,7 @@ class DevicesListBloc extends Bloc<DevicesListEvent, DevicesListState> {
 
     on<LoadingFalure>((event, emit) {
       emit(DevicesListLoadingFailure(
-          status: event.status.name, exception: event.exception.toString()));
+          status: event.status.stringValue, exception: event.exception.toString()));
     });
 
     on<ConnectDevice>((event, emit) async {
