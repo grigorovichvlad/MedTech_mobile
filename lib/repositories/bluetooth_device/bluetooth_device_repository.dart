@@ -24,7 +24,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   final List<MedTechDevice> bluetoothDevices = [];
   StreamSubscription? _scanSubscription;
   late StreamSubscription<ConnectionStateUpdate> _connectionIOS;
-  Future<BluetoothConnection>? _connectionAndroid;
+  BluetoothConnection? _connectionAndroid;
 
 
   @override
@@ -122,16 +122,11 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       debugPrint('Connecting to $deviceId');
 
       try {
-        _connectionAndroid = FlutterBluetoothSerial.instance.connect(BluetoothDevice(address: deviceId)) as Future<BluetoothConnection>?;
-        await _connectionAndroid!.then((connection) {
-          debugPrint('Connected to the device');
-          completer.complete();
-        }).catchError((error) {
-          debugPrint('Cannot connect, exception occurred');
-          debugPrint(error.toString());
-          completer.completeError(error);
-        });
-      } catch (e) {
+        _connectionAndroid = await BluetoothConnection.toAddress(BluetoothDevice(address: deviceId) as String?);
+        debugPrint('Connected to the device');
+        completer.complete();
+      }
+      catch (e) {
         debugPrint('Connecting to device $deviceId resulted in error $e');
         if (!completer.isCompleted) {
           completer.completeError(e);
