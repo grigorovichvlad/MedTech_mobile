@@ -24,7 +24,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   final List<MedTechDevice> bluetoothDevices = [];
   StreamSubscription? _scanSubscription;
   late StreamSubscription<ConnectionStateUpdate> _connectionIOS;
-  final BluetoothConnection? _connectionAndroid;
+  late final BluetoothConnection? _connectionAndroid;
 
 
   @override
