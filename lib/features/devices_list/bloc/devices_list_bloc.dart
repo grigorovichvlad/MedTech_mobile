@@ -21,14 +21,15 @@ class DevicesListBloc extends Bloc<DevicesListEvent, DevicesListState> {
 
       List<PermissionStatus> status = [
         await Permission.bluetoothConnect.status,
-        // await Permission.location.status, \\ нужно будет вернуть в AndroidManifest
+        await Permission.bluetooth.status,
+        await Permission.location.status, // нужно будет вернуть в AndroidManifest
         await Permission.bluetoothScan.status,
       ];
 
       if (status[0].isDenied || /* status[1].isDenied ||*/ status[1].isDenied) {
         // We didn't ask for permission yet or the permission has been denied before but not permanently.
         Map<Permission, PermissionStatus> statuses = await [
-          // Permission.location,
+          Permission.location,
           Permission.bluetoothScan,
           Permission.bluetoothConnect,
         ].request();

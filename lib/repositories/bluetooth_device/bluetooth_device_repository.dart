@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
 import '../../features/devices_list/bloc/devices_list_bloc.dart';
 
@@ -25,6 +26,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   StreamSubscription? _scanSubscription;
   late StreamSubscription<ConnectionStateUpdate> _connectionIOS;
   late final BluetoothConnection? _connectionAndroid;
+
 
 
   @override
