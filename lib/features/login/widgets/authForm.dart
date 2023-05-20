@@ -131,7 +131,7 @@ class _AuthFormState extends State<AuthForm> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      debugPrint("Вход");
+                      debugPrint("Попытка входа");
                       setState(() {
                         _submit();
                       });
