@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -42,9 +44,26 @@ class DevicesListBloc extends Bloc<DevicesListEvent, DevicesListState> {
     });
 
     on<LoadingFalure>((event, emit) {
-      emit(DevicesListLoadingFailure(
-          status: event.status.name, exception: event.exception.toString()));
+      if (event.status is BleStatus) {
+        BleStatus StatusIOS = event.status as BleStatus;
+        emit(DevicesListLoadingFailure(
+            status: StatusIOS.toString(),
+            exception: event.exception.toString()
+        ));
+      } else if (event.status is BluetoothState) {
+        BluetoothState StatusAndroid = event.status as BluetoothState;
+        emit(DevicesListLoadingFailure(
+            status: StatusAndroid.toString(),
+            exception: event.exception.toString()
+        ));
+      } else {
+        emit(DevicesListLoadingFailure(
+            status: 'Unknowne',// тут попа нам
+            exception: event.exception.toString()
+        ));
+      }
     });
+
 
     on<ConnectDevice>((event, emit) async {
       await devicesRepository.stopScan();

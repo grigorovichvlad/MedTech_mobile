@@ -6,17 +6,17 @@ import 'package:mockito/mockito.dart';
 import 'features/devices_list/bloc/devices_list_bloc.dart';
 
 class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepository {
-  final List<BluetoothDevice> _bluetoothDevices = [];
+  final List<MedTechDevice> _bluetoothDevices = [];
 
   @override
   void scanForDevices(DevicesListBloc devicesListBloc) {
     _bluetoothDevices.clear();
     _bluetoothDevices.addAll([
-      BluetoothDevice(
+      MedTechDevice(
         name: 'Test Device 1',
         id: 'mac-address 1',
       ),
-      BluetoothDevice(
+      MedTechDevice(
         name: 'Test Device 2',
         id: 'mac-address 2',
       ),
@@ -25,7 +25,7 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
   }
 
   @override
-  List<BluetoothDevice> get bluetoothDevices => _bluetoothDevices;
+  List<MedTechDevice> get bluetoothDevices => _bluetoothDevices;
 
   @override
   Future<void> stopScan() async {

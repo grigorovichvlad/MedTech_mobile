@@ -7,7 +7,7 @@ class DeviceTile extends StatelessWidget{
    required this.device, required this.onTap,
 }) : super(key: key);
 
-  final BluetoothDevice device;
+  final MedTechDevice device;
   final VoidCallback onTap;
 
   @override
