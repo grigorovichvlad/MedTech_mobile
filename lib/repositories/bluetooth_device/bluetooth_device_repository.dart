@@ -24,7 +24,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   final List<MedTechDevice> bluetoothDevices = [];
   StreamSubscription? _scanSubscription;
   late StreamSubscription<ConnectionStateUpdate> _connectionIOS;
-  BluetoothConnection? _connectionAndroid;
+  final BluetoothConnection? _connectionAndroid;
 
 
   @override
@@ -122,8 +122,8 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       debugPrint('Connecting to $deviceId');
 
       try {
-        _connectionAndroid = await BluetoothConnection.toAddress(BluetoothDevice(address: deviceId) as String?);
-        debugPrint('Connected to the device');
+        _connectionAndroid = await BluetoothConnection.toAddress(deviceId);
+        debugPrint('Connected to the $deviceId');
         completer.complete();
       }
       catch (e) {
