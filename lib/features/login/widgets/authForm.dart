@@ -119,7 +119,7 @@ class _AuthFormState extends State<AuthForm> {
         BlocBuilder<LoginPageBloc, LoginPageState>(
             bloc: widget.loginBloc,
             builder: (context, state) {
-              if (state is LoginPageLoginRight) {
+              if (state is LoginPageSuccess) {
                 return Text(
                   'Добро пожаловать, ${_controllerUsername.text}',
                   style: textTheme.bodyMedium,
@@ -131,6 +131,7 @@ class _AuthFormState extends State<AuthForm> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
+                      debugPrint("Вход");
                       setState(() {
                         _submit();
                       });

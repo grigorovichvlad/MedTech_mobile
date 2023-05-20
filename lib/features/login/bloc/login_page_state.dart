@@ -4,16 +4,13 @@ abstract class LoginPageState {}
 
 class LoginPageInitial extends LoginPageState {}
 
-class LoginPageLoading extends LoginPageState {}
-
-class LoginButtonLoading extends LoginPageState {}
-
-class LoginPageLoginRight extends LoginPageState { // если логин валид
-
-
+class LoginPageLoading extends LoginPageState {
 }
 
-class LoginPageLoginFailure extends LoginPageState { //кидаю ошибку на неверныый вход
-  LoginPageLoginFailure({required this.exception});
+class LoginPageSuccess extends LoginPageState {}
+
+
+class LoginPageFailure extends LoginPageState { //кидаю ошибку на неверныый вход
+  LoginPageFailure({required this.exception});
   final Object? exception;
 }
