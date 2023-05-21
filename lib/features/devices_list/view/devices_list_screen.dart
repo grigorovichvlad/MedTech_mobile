@@ -52,7 +52,6 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
         color: Colors.white,
         onRefresh: () async {
           _bluetoothDevicesList.add(LoadDevicesList());
-          // await Future.delayed(const Duration(seconds: 4));
         },
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         child: BlocBuilder<DevicesListBloc, DevicesListState>(
@@ -73,13 +72,9 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                         _bluetoothDevicesList.add(ConnectDevice(
                             id: device.id,
                             onSubmit: () async {
-                              var isNeedRefresh =
-                                  await Navigator.pushReplacementNamed(
-                                      context, '/status');
-                              if (isNeedRefresh == true ||
-                                  isNeedRefresh == null) {
-                                _bluetoothDevicesList.add(LoadDevicesList());
-                              }
+                              await Navigator.pushReplacementNamed(
+                                  context, '/status');
+                              _bluetoothDevicesList.add(LoadDevicesList());
                             }));
                       },
                     );
@@ -87,6 +82,7 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
             }
 
             if (state is DevicesListLoadingFailure) {
+              //TODO: Переписать
               var bleException = state.exception;
               bleException = bleException.substring(
                   bleException.indexOf("message: \"") + 10,

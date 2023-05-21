@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
+import '../../repositories/bluetooth_device/bluetooth_device_repository.dart';
 import '../../repositories/local_data_base/local_db_repository.dart';
 import 'confirmation_dialog.dart';
 
 class ExitButton extends StatelessWidget {
   const ExitButton({Key? key}) : super(key: key);
 
+  get devicesRepository => GetIt.I<BluetoothDeviceRepository>();
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
         ConfirmationDialog(
-            onAgree: () {
+            onAgree: () async {
               Navigator.pushReplacementNamed(context, '/');
+              await devicesRepository.disconnect();
               final isar =
               LocalDBRepository(); //'isar' - name of dataBase
               isar.deleteUserData();

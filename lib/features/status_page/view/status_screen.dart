@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:med_tech_mobile/features/widgets/confirmation_dialog.dart';
 import 'package:med_tech_mobile/features/widgets/exit_button.dart';
 
+import '../../../repositories/bluetooth_device/bluetooth_device_repository.dart';
 import '../../../repositories/local_data_base/local_db_repository.dart';
 
 class StatusScreen extends StatefulWidget {
@@ -12,6 +14,8 @@ class StatusScreen extends StatefulWidget {
 }
 
 class _StatusScreenState extends State<StatusScreen> {
+  get devicesRepository => GetIt.I<BluetoothDeviceRepository>();
+
   @override
   void initState() {
     super.initState();
@@ -27,8 +31,9 @@ class _StatusScreenState extends State<StatusScreen> {
         leading: IconButton(
           onPressed: () {
             ConfirmationDialog(
-                    onAgree: () {
+                    onAgree: () async {
                       Navigator.pushReplacementNamed(context, '/devices');
+                      await devicesRepository.disconnect();//Отключение устройства, если оно подключено
                     },
                     query: 'Вы точно хотите сменить устройство?')
                 .build(context);
