@@ -1,25 +1,26 @@
 part of 'status_screen_bloc.dart';
 
-abstract class StatusScreenState extends Equatable{}
+abstract class StatusState extends Equatable{}
 
-class StatusScreenInitial extends StatusScreenState {
+class StatusScreenInitial extends StatusState {
   @override
   List<Object?> get props => [];
 }
 
-class StatusScreenLoading extends StatusScreenState {
+class StatusScreenLoading extends StatusState {
   @override
   List<Object?> get props => [];
 }
 
-class StatusScreenLoaded extends StatusScreenState {
-  StatusScreenLoaded();
+class StatusScreenLoaded extends StatusState {
+  StatusScreenLoaded(this.data);
+  final String data;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [data];
 }
 
-class StatusScreenLoadingFailure extends StatusScreenState {
+class StatusScreenLoadingFailure extends StatusState {
   StatusScreenLoadingFailure();
 
   @override

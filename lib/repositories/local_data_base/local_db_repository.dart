@@ -28,13 +28,25 @@ class LocalDBRepository {
   Future<void> deleteUserData() async {
     final isar = await db;
     isar.writeTxnSync<bool>(() => isar.userDatas.deleteSync(1));
+    deleteControllerData();
     //TODO: Delete the token
-    //TODO: Add Controller Data Erasing
+  }
+
+  Future<void> deleteControllerData() async {
+    final isar = await db;
+    isar.writeTxnSync<void>(() => isar.controllerDatas.clearSync());
   }
 
   Future<List<String?>> readUsernamePassword() async {
     final isar = await db;
     final userData = await isar.userDatas.get(1);
     return [userData?.username, userData?.password];
+  }
+
+  void addControllerData(String json) async {
+    final isar = await db;
+    final data = ControllerData(dataJSON: json);
+    isar.writeTxnSync<void>(() => isar.controllerDatas.putSync(data));
+
   }
 }

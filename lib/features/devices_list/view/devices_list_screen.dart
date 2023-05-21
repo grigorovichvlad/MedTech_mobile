@@ -11,6 +11,7 @@ import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../repositories/local_data_base/local_db_repository.dart';
+import '../../widgets/confirmation_dialog.dart';
 import '../../widgets/exit_button.dart';
 
 class BluetoothDevices extends StatefulWidget {
@@ -68,13 +69,37 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                     return DeviceTile(
                       device: device,
                       onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return WillPopScope(
+                              onWillPop: () async {
+                                return false;
+                              },
+                              child: SimpleDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                title: const Center(child: Text('Подключение')),
+                                children: [
+                                  Center(
+                                      child: CircularProgressIndicator(
+                                          color: theme.indicatorColor))
+                                ],
+                              ),
+                            );
+                          },
+                          barrierDismissible: false,
+                        );
                         debugPrint('Подключение к ${device.name}');
                         _bluetoothDevicesList.add(ConnectDevice(
                             id: device.id,
                             onSubmit: () async {
                               await Navigator.pushReplacementNamed(
                                   context, '/status');
-                              _bluetoothDevicesList.add(LoadDevicesList());
+                            },
+                            closeDialog: () {
+                              Navigator.of(context, rootNavigator: true).pop();
                             }));
                       },
                     );

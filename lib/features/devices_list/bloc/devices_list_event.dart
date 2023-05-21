@@ -29,15 +29,24 @@ class SetDevicesList extends DevicesListEvent{
   List<Object?> get props => [completer, devicesList];
 }
 
+class DialogShow extends DevicesListEvent {
+  DialogShow();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class ConnectDevice extends DevicesListEvent{
   ConnectDevice({
     this.completer,
     required this.id,
     required this.onSubmit,
+    required this.closeDialog,
   });
   final Completer? completer;
   final String id;
   final Function onSubmit;
+  final Function closeDialog;
 
   @override
   List<Object?> get props => [completer, id];

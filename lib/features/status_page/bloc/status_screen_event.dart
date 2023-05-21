@@ -1,11 +1,18 @@
 part of 'status_screen_bloc.dart';
 
-abstract class StatusScreenEvent extends Equatable{
+abstract class StatusEvent extends Equatable{
   get completer => null;
 }
 
-class LoadStatusScreen extends StatusScreenEvent{
+class LoadStatusScreen extends StatusEvent{
   LoadStatusScreen();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class LoadDataInDB extends StatusEvent{
+  LoadDataInDB();
 
   @override
   List<Object?> get props => [];

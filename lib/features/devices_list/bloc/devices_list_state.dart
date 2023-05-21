@@ -33,3 +33,8 @@ class DeviceConnecting extends DevicesListState {
   @override
   List<Object?> get props => [];
 }
+
+class DeviceConnected extends DevicesListState {
+  @override
+  List<Object?> get props => [];
+}

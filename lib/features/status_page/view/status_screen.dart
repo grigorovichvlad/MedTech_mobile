@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get_it/get_it.dart';
+import 'package:med_tech_mobile/features/status_page/bloc/status_screen_bloc.dart';
 import 'package:med_tech_mobile/features/widgets/confirmation_dialog.dart';
 import 'package:med_tech_mobile/features/widgets/exit_button.dart';
 
@@ -14,10 +19,20 @@ class StatusScreen extends StatefulWidget {
 }
 
 class _StatusScreenState extends State<StatusScreen> {
-  get devicesRepository => GetIt.I<BluetoothDeviceRepository>();
+  final devicesRepository = GetIt.I<BluetoothDeviceRepository>();
+  final _statusBloc = StatusBloc(GetIt.I<BluetoothDeviceRepository>());
+  late StreamSubscription<BluetoothState>? _stateStream;
+  BluetoothState? _bluetoothState;
 
   @override
   void initState() {
+    _statusBloc.add(LoadStatusScreen());
+    debugPrint("State stream is casting.");
+    _stateStream = devicesRepository.listenForState((state) {
+      setState(() {
+        _bluetoothState = state;
+      });
+    });
     super.initState();
   }
 
@@ -33,7 +48,7 @@ class _StatusScreenState extends State<StatusScreen> {
             ConfirmationDialog(
                     onAgree: () async {
                       Navigator.pushReplacementNamed(context, '/devices');
-                      await devicesRepository.disconnect();//Отключение устройства, если оно подключено
+                      devicesRepository.disconnect(); //Отключение устройства, если оно подключено
                     },
                     query: 'Вы точно хотите сменить устройство?')
                 .build(context);
@@ -56,6 +71,20 @@ class _StatusScreenState extends State<StatusScreen> {
         actions: [
           const ExitButton().build(context),
         ],
+      ),
+      body: BlocBuilder<StatusBloc, StatusState>(
+        bloc: _statusBloc,
+        builder: (context, state) {
+          if (state is StatusScreenLoaded) {
+
+            return SingleChildScrollView(child: Text(state.data));
+          }
+          if (_bluetoothState == BluetoothState.STATE_OFF) {
+            FlutterBluetoothSerial.instance.requestEnable();
+          }
+          return const Center(
+              child: CircularProgressIndicator(color: Colors.blue));
+        },
       ),
     );
   }

@@ -17,9 +17,9 @@ class ExitButton extends StatelessWidget {
         ConfirmationDialog(
             onAgree: () async {
               Navigator.pushReplacementNamed(context, '/');
-              await devicesRepository.disconnect();
-              final isar =
-              LocalDBRepository(); //'isar' - name of dataBase
+              devicesRepository.disconnect();
+              devicesRepository.stopScan();
+              final isar = LocalDBRepository();
               isar.deleteUserData();
             },
             query: 'Вы точно хотите выйти?')

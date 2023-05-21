@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get_it/get_it.dart';
+import 'package:med_tech_mobile/dependency_provider.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -64,9 +65,16 @@ class DevicesListBloc extends Bloc<DevicesListEvent, DevicesListState> {
 
     on<ConnectDevice>((event, emit) async {
       await devicesRepository.stopScan();
-      await devicesRepository.connect(event.id);
-      emit(DeviceConnecting());
-      await event.onSubmit();
+      try {
+        await devicesRepository.connect(event.id);
+      }
+      catch (error) {
+        debugPrint("ERROR");
+      }
+      event.closeDialog();
+      if (devicesRepository.isConnected()) {
+        await event.onSubmit();
+      }
       event.completer?.complete();
     });
   }

@@ -95,6 +95,31 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   }
 
   @override
+  void listenForData(void Function(Uint8List) onData) {
+    if (Platform.isIOS) {
+    }
+    else if (Platform.isAndroid) {
+    _connectionAndroid?.input?.listen(
+            (Uint8List characters)
+        {
+          onData(characters);
+        });
+    }
+  }
+
+  @override
+  StreamSubscription<BluetoothState>? listenForState(void Function(BluetoothState) onData) {
+    if (Platform.isIOS) {
+      return null;
+    }
+    else if (Platform.isAndroid) {
+      return bluetooth?.onStateChanged().listen((state) {
+        onData(state);
+      });
+    }
+  }
+
+  @override
   Future<void> connect(String? deviceId) async {
     if (Platform.isIOS) {
       final completer = Completer<void>();
@@ -133,12 +158,6 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
 
       try {
         _connectionAndroid = await BluetoothConnection.toAddress(deviceId);
-        _connectionAndroid?.input?.listen((data) {
-          debugPrint(ascii.decode(data));
-          if (ascii.decode(data).contains('{')) {
-
-          }
-        });
         debugPrint('Connected to the $deviceId');
         completer.complete();
       } catch (e) {
@@ -182,10 +201,20 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     if (Platform.isIOS) {
       //TODO: aboba
     } else if (Platform.isAndroid) {
-      if (_connectionAndroid?.isConnected ?? false) {
+      // if (_connectionAndroid?.isConnected ?? false) {
         await _connectionAndroid?.finish(); // Closing connection
+        _connectionAndroid = null;
         debugPrint('Disconnecting by local host');
-      }
+      // }
     }
+  }
+
+  @override
+  bool isConnected() {
+    if (Platform.isIOS) {
+    } else if (Platform.isAndroid) {
+      return _connectionAndroid?.isConnected ?? false;
+    }
+    return false;
   }
 }
