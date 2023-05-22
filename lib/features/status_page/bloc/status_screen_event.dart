@@ -17,3 +17,18 @@ class LoadDataInDB extends StatusEvent{
   @override
   List<Object?> get props => [];
 }
+class LoadStatus extends StatusEvent{
+  LoadStatus();
+
+  @override
+  List<Object?> get props => [];
+}
+
+
+class LoadDataInLocalDB extends StatusEvent{
+  LoadDataInLocalDB({required this.data});
+  final String data;
+
+  @override
+  List<Object?> get props => [];
+}
