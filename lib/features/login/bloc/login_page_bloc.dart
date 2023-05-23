@@ -17,31 +17,30 @@ part 'login_page_state.dart';
 class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
   LoginPageBloc() : super(LoginPageInitial()) {
     on<ButtonLoginPressed>((event, emit) async {
-      var isLogedIn = false;
+      var isLoggedIn = false;
       emit(LoginLoadingButton());
 
       final isar = LocalDBRepository(); //'isar' - name of dataBase
 
       try {
-        final result = await loginUser(event.username!, event.password!);
-        if (result) {
+        final token = await loginUser(event.username!, event.password!);
+        if (token != null) {
           debugPrint("Вход выполнен, пользователь: ${event.username!}");
           isar.updateUserData(event.username!, event.password!);
           event.onSubmit();
-          isLogedIn = true;
-          emit(LoginPageSuccess());
+          isLoggedIn = true;
+          emit(LoginPageSuccess(token: ''));
         }
       } catch (e) {
         emit(LoginPageFailure(exception: e));
       }
 
-      if (isLogedIn == false) {
+      if (!isLoggedIn) {
         emit(LoginPageInitial());
       }
     });
 
     on<LoginOnLaunch>((event, emit) async {
-
       emit(LoginPageLoading());
 
       final isar = LocalDBRepository(); //'isar' - name of dataBase
@@ -60,20 +59,21 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
 
   get devicesRepository => GetIt.I<BluetoothDeviceRepository>();
 
-  Future<bool> loginUser(String username, String password) async {
-    // final response = await Dio().post(
-    //   'https://endpoint.com/login',
-    //   data: {'username': username, 'password': password},
-    // );
-    // await Future.delayed(const Duration(seconds: 1));
-    if ((username == "admin") && (password == "admin")) {
-      return true;
+  Future<String?> loginUser(String username, String password) async {
+    final response = await Dio().post(
+      'http://127.0.0.1:8000/api/token/',
+      data: {'username': username, 'password': password},
+    );
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (response.statusCode == 200) {
+      final token = response.data['token'] as String?;
+      return token;
+    } else {
+      return null;
     }
-    else
-      return false;
-    // else {
-    //   return response.statusCode == 200;
-    // }
   }
 }
+
+
 
