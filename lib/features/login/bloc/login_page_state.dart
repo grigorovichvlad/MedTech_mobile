@@ -8,7 +8,10 @@ class LoginPageLoading extends LoginPageState {}
 
 class LoginLoadingButton extends LoginPageState {}
 
-class LoginPageSuccess extends LoginPageState {}
+class LoginPageSuccess extends LoginPageState {
+  LoginPageSuccess({required this.token});
+  final String token;
+}
 
 class LoginPageFailure extends LoginPageState { //кидаю ошибку на неверныый вход
   LoginPageFailure({required this.exception});
