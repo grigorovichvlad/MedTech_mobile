@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:med_tech_mobile/repositories/DB_isolate_repository/db_isolate_repository.dart';
 import 'package:med_tech_mobile/repositories/local_data_base/local_db_repository.dart';
 import 'package:dio/dio.dart';
 
@@ -19,7 +18,6 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
     on<ButtonLoginPressed>((event, emit) async {
       var isLogedIn = false;
       emit(LoginLoadingButton());
-
       final isar = LocalDBRepository(); //'isar' - name of dataBase
 
       try {
@@ -69,8 +67,9 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
     if ((username == "admin") && (password == "admin")) {
       return true;
     }
-    else
+    else {
       return false;
+    }
     // else {
     //   return response.statusCode == 200;
     // }

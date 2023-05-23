@@ -12,7 +12,7 @@ abstract class AbstractBluetoothRepository{
   Future<void> disconnect();
   void listenForData(void Function(Uint8List) onData);
   StreamSubscription<BluetoothState>? listenForState(void Function(BluetoothState) onData);
-  void scanForDevices(DevicesListBloc devicesListBloc);
+  void scanForDevices(DevicesListBloc devicesListBloc, void Function() onDone);
   Future<void> connect(String? deviceId);
   bool isConnected();
 }

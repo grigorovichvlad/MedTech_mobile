@@ -10,7 +10,7 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
   final List<MedTechDevice> _bluetoothDevices = [];
 
   @override
-  void scanForDevices(DevicesListBloc devicesListBloc) {
+  void scanForDevices(DevicesListBloc devicesListBloc, void Function() onDone) {
     _bluetoothDevices.clear();
     _bluetoothDevices.addAll([
       MedTechDevice(

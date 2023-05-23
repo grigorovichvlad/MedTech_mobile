@@ -31,7 +31,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   BluetoothConnection? _connectionAndroid;
 
   @override
-  void scanForDevices(DevicesListBloc devicesListBloc) {
+  void scanForDevices(DevicesListBloc devicesListBloc, void Function() onDone) {
     if (Platform.isIOS) {
       bluetoothDevices.clear();
       _scanSubscription?.cancel();
@@ -53,7 +53,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
         }
       }, onError: (error) {
         devicesListBloc
-            .add(LoadingFalure(status: ble!.status, exception: error));
+            .add(LoadingFalure(code: ble!.status, exception: error));
       });
     } else if (Platform.isAndroid) {
       debugPrint('scanForDevices: Starting...');
@@ -64,7 +64,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
         debugPrint(
             'scanForDevices: Discovered ${device.name} (${device.address})');
         final indexOfDevice =
-            bluetoothDevices.indexWhere((d) => (device.address == d.id));
+        bluetoothDevices.indexWhere((d) => (device.address == d.id));
         if (indexOfDevice < 0 &&
             device.name != null &&
             device.name!.isNotEmpty) {
@@ -81,16 +81,10 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
               MedTechDevice(name: device.name ?? '', id: device.address);
         }
       },
-          onDone: () {
-
-          },
-          onError: (error) async {
-        debugPrint('scanForDevices: An error occurred - $error');
-        BluetoothState currentState =
-            await FlutterBluetoothSerial.instance.state;
-        devicesListBloc
-            .add(LoadingFalure(exception: error, status: currentState));
-      });
+          onDone: () async {
+            onDone();
+            debugPrint('scanForDevices: Discovering is done.');
+          });
     }
   }
 
@@ -188,12 +182,13 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   Future<void> stopScan() async {
     if (Platform.isIOS) {
       await _scanSubscription?.cancel();
-      _scanSubscription = null;
     } else if (Platform.isAndroid) {
-      await bluetooth?.cancelDiscovery();
-      _scanSubscription?.cancel();
-      _scanSubscription = null;
+      if (await FlutterBluetoothSerial.instance.isDiscovering ?? false) {
+        await bluetooth?.cancelDiscovery();
+        _scanSubscription?.cancel();
+      }
     }
+    _scanSubscription = null;
   }
 
   @override

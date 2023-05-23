@@ -1,17 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/features/devices_list/widgets/device_tile.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:med_tech_mobile/features/devices_list/bloc/devices_list_bloc.dart';
 import 'package:med_tech_mobile/features/devices_list/widgets/widgets.dart';
 import 'package:get_it/get_it.dart';
-import 'dart:async';
-
 import 'package:permission_handler/permission_handler.dart';
-
-import '../../../repositories/local_data_base/local_db_repository.dart';
-import '../../widgets/confirmation_dialog.dart';
 import '../../widgets/exit_button.dart';
 
 class BluetoothDevices extends StatefulWidget {
@@ -107,14 +103,20 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
             }
 
             if (state is DevicesListLoadingFailure) {
-              //TODO: Переписать
-              var bleException = state.exception;
-              bleException = bleException.substring(
-                  bleException.indexOf("message: \"") + 10,
-                  bleException.toString().lastIndexOf("\""));
-              var exceptionCode = bleException.substring(
-                  bleException.indexOf("(code ") + 6,
-                  bleException.toString().indexOf(")"));
+              String bleException = "";
+              String exceptionCode = "";
+              if (Platform.isIOS) {
+                bleException = state.exception;
+                bleException = bleException.substring(
+                    bleException.indexOf("message: \"") + 10,
+                    bleException.toString().lastIndexOf("\""));
+                exceptionCode = bleException.substring(
+                    bleException.indexOf("(code ") + 6,
+                    bleException.toString().indexOf(")"));
+              } else if (Platform.isAndroid) {
+                bleException = state.exception;
+                exceptionCode = (state.code as int).toString();
+              }
 
               switch (exceptionCode) {
                 //Тут обработаем любую ошибку блютуза.
@@ -123,7 +125,7 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                   break;
                 case '3': //Location permissions missing
                   bleException =
-                      'Необходимо разрешение\n\"Устройства поблизости\"';
+                      'Для работы приложения\nнужно несколько разрешений';
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -136,8 +138,7 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                         const SizedBox(height: 10),
                         FilledButton.tonal(
                           onPressed: () async {
-                            while (await openAppSettings() ==
-                                false) {} //точно откроет настройки
+                            await openAppSettings(); //точно откроет настройки
                             _bluetoothDevicesList.add(LoadDevicesList());
                           },
                           style: FilledButton.styleFrom(
@@ -149,6 +150,13 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                       ],
                     ),
                   );
+                case '777':
+                  bleException =
+                  'Перезапустите приложение';
+                  break;
+                case '667':
+                  bleException =
+                  'Нет доступных устройств';
                   break;
                 case '2147483646': //Throttle
                   bleException = 'Слишком быстро.\nПовторите позже.';
