@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:med_tech_mobile/features/login/widgets/authForm.dart';
 
 class Login extends StatefulWidget {
-  Login({Key? key}) : super(key: key);
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -108,9 +108,9 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       loginViaButton(loginViaImages[0]),
-                      SizedBox(width: 30),
+                      const SizedBox(width: 30),
                       loginViaButton(loginViaImages[1]),
-                      SizedBox(width: 30),
+                      const SizedBox(width: 30),
                       loginViaButton(loginViaImages[2]),
                     ],
                   ),

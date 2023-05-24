@@ -5,10 +5,9 @@ part 'controller_data.g.dart';
 
 @collection
 class ControllerData {
-  ControllerData({this.dateTime, required this.dataJSON});
+  ControllerData({required this.dataJSON});
 
   Id id = Isar.autoIncrement;
 
-  final DateTime? dateTime;
   final String dataJSON;
 }

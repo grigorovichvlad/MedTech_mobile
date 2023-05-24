@@ -5,12 +5,12 @@ part 'user_data.g.dart';
 
 @collection
 class UserData {
-  UserData({this.username, this.password, this.bluetoothId});
+  UserData({required this.username, required this.password, required this.token});
   Id id = 1;
 
   late String? username;
 
   late String? password;
 
-  late String? bluetoothId;
+  late String? token;
 }

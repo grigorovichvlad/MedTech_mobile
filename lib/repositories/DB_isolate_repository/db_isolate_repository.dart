@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:isolate';
+import 'package:dart_ping/dart_ping.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:med_tech_mobile/repositories/local_data_base/local_db_repository.dart';
 
 class DBIsolateRepository {
   ReceivePort? _receivePort;
@@ -8,7 +11,8 @@ class DBIsolateRepository {
   SendPort? _isolateSendPort;
   StreamSubscription<dynamic>? messagesSubscription;
   static final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://data.binance.com/api/v3/ticker', // there should be URL of our endpoint sender
+    baseUrl:
+        'https://data.binance.com/api/v3/ticker', // there should be URL of our endpoint sender
   ));
 
   DBIsolateRepository();
@@ -50,18 +54,28 @@ class DBIsolateRepository {
     });
   }
 
-  void sendControllerData(String data, String token) {
-
+  Future<void> sendControllerData(String data, String token) async {
+    final isar = LocalDBRepository();
     if (_isolate != null) {
+      final ping = Ping('data.binance.com', count: 1);
+      ping.stream.listen((event) async {
+        if (event.summary != null) {
+          // debugPrint('ping summary ${event.summary}');
+          var localData = await isar.getControllerDataSizeAndDelete();
+          for (var i in localData) {
+            debugPrint(i?.dataJSON);
+            _isolateSendPort?.send(['send', i?.dataJSON, token]);
+          }
+        }
+      });
       _isolateSendPort?.send(['send', data, token]);
-    }
-    else {
+    } else {
       throw IsolateSpawnException('Isolate should be spawned.');
     }
   }
 
-  Future<void> listen(
-      void Function(String, DioError) onError, void Function() onSuccess) async {
+  Future<void> listen(void Function(String, DioError) onError,
+      void Function() onSuccess) async {
     _isolate?.kill();
     _spawnIsolate();
 
@@ -72,8 +86,7 @@ class DBIsolateRepository {
       if (message is int?) {
         if (message == 200) {
           onSuccess();
-        }
-        else {
+        } else {
           throw UnimplementedError();
         }
       }
