@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get_it/get_it.dart';
 import 'package:med_tech_mobile/repositories/DB_isolate_repository/db_isolate_repository.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
@@ -16,16 +17,25 @@ class StatusBloc extends Bloc<StatusEvent, StatusState> {
   final _dbInstance = GetIt.I<DBIsolateRepository>();
   final isar = LocalDBRepository();
   int counter = 0;
+  bool internetConnection = false;
 
   StatusBloc(this.devicesRepository) : super(StatusScreenInitial()) {
     on<LoadStatusScreen>((event, emit) async {
+      add(LoadStatus());
+
+      devicesRepository.listenForState((state) {
+        if (state == BluetoothState.STATE_OFF) {
+          event.onDisconnect();
+        }
+      });
       await _dbInstance.listen((data, dioError) {
-        debugPrint(dioError.toString());
+        add(LoadStatus());
         isar.addControllerData(data);
+        internetConnection = false;
       }, () {
         counter++;
+        internetConnection = true;
         add(LoadStatus());
-        debugPrint('Sent');
       });
       devicesRepository.listenForData((data) {
         if (data.contains(ascii.encode('{').first) &&
@@ -50,12 +60,18 @@ class StatusBloc extends Bloc<StatusEvent, StatusState> {
             _dbInstance.sendControllerData(sendingData, '123');
           }
         }
+      }, () {
+        if (devicesRepository.disconnectionSource() == false) {
+          event.onDisconnect();
+        }
       });
     });
 
-    on<LoadStatus>((event, emit) {
-      emit(StatusScreenLoaded('Amount of successful requests: ${counter.toString()}'));
+    on<LoadStatus>((event, emit) async {
+      emit(StatusScreenLoaded(
+          counter, await isar.getControllerDataSize(), internetConnection));
     });
+
   }
 
   String dataBuffer = "", sendingData = "";

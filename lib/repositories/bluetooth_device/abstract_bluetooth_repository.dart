@@ -10,9 +10,13 @@ import '../../features/devices_list/bloc/devices_list_bloc.dart';
 abstract class AbstractBluetoothRepository{
   Future<void> stopScan();
   Future<void> disconnect();
-  void listenForData(void Function(Uint8List) onData);
+  void listenForData(
+      void Function(Uint8List) onData,
+      void Function() onDone,
+      );
   StreamSubscription<BluetoothState>? listenForState(void Function(BluetoothState) onData);
   void scanForDevices(DevicesListBloc devicesListBloc, void Function() onDone);
   Future<void> connect(String? deviceId);
   bool isConnected();
+  bool? disconnectionSource();
 }

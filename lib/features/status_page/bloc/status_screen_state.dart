@@ -8,16 +8,18 @@ class StatusScreenInitial extends StatusState {
 }
 
 class StatusScreenLoading extends StatusState {
+
   @override
   List<Object?> get props => [];
 }
 
 class StatusScreenLoaded extends StatusState {
-  StatusScreenLoaded(this.data);
-  final String data;
+  StatusScreenLoaded(this.count, this.dataSize, this.internetConnection);
+  final int count, dataSize;
+  final bool internetConnection;
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [count, dataSize, internetConnection];
 }
 
 class StatusScreenLoadingFailure extends StatusState {

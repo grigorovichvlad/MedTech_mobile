@@ -5,5 +5,5 @@ import 'package:med_tech_mobile/features/status_page/status_screen.dart';
 final routers = {
   '/' : (context) => Login(),
   '/devices' : (context) => BluetoothDevices(),
-  '/status' : (context) => StatusScreen(),
+  // '/status' : (context) => StatusScreen(),
 };

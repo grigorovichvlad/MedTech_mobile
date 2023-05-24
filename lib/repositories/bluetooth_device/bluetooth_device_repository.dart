@@ -13,7 +13,6 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
   final FlutterBluetoothSerial? bluetooth;
   final FlutterReactiveBle? ble;
 
-
   BluetoothDeviceRepository({this.bluetooth, this.ble}) {
     if (Platform.isIOS && ble == null) {
       throw ArgumentError('ble cant be null on IOS');
@@ -52,8 +51,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
               MedTechDevice(name: device.name, id: device.id);
         }
       }, onError: (error) {
-        devicesListBloc
-            .add(LoadingFalure(code: ble!.status, exception: error));
+        devicesListBloc.add(LoadingFalure(code: ble!.status, exception: error));
       });
     } else if (Platform.isAndroid) {
       debugPrint('scanForDevices: Starting...');
@@ -64,7 +62,7 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
         debugPrint(
             'scanForDevices: Discovered ${device.name} (${device.address})');
         final indexOfDevice =
-        bluetoothDevices.indexWhere((d) => (device.address == d.id));
+            bluetoothDevices.indexWhere((d) => (device.address == d.id));
         if (indexOfDevice < 0 &&
             device.name != null &&
             device.name!.isNotEmpty) {
@@ -80,37 +78,39 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
           bluetoothDevices[indexOfDevice] =
               MedTechDevice(name: device.name ?? '', id: device.address);
         }
-      },
-          onDone: () async {
-            onDone();
-            debugPrint('scanForDevices: Discovering is done.');
-          });
+      }, onDone: () async {
+        onDone();
+        debugPrint('scanForDevices: Discovering is done.');
+      });
     }
   }
 
   @override
-  void listenForData(void Function(Uint8List) onData) {
+  void listenForData(
+    void Function(Uint8List) onData,
+      void Function() onDone,
+  ) {
     if (Platform.isIOS) {
-    }
-    else if (Platform.isAndroid) {
-    _connectionAndroid?.input?.listen(
-            (Uint8List characters)
-        {
-          onData(characters);
-        });
+    } else if (Platform.isAndroid) {
+      _connectionAndroid?.input?.listen((Uint8List characters) {
+        onData(characters);
+      }, onDone: () {
+        onDone();
+      });
     }
   }
 
   @override
-  StreamSubscription<BluetoothState>? listenForState(void Function(BluetoothState) onData) {
+  StreamSubscription<BluetoothState>? listenForState(
+      void Function(BluetoothState) onData) {
     if (Platform.isIOS) {
       return null;
-    }
-    else if (Platform.isAndroid) {
+    } else if (Platform.isAndroid) {
       return bluetooth?.onStateChanged().listen((state) {
         onData(state);
       });
     }
+    return null;
   }
 
   @override
@@ -197,9 +197,9 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
       //TODO: aboba
     } else if (Platform.isAndroid) {
       // if (_connectionAndroid?.isConnected ?? false) {
-        await _connectionAndroid?.finish(); // Closing connection
-        _connectionAndroid = null;
-        debugPrint('Disconnecting by local host');
+      await _connectionAndroid?.finish(); // Closing connection
+      _connectionAndroid = null;
+      debugPrint('Disconnecting by local host');
       // }
     }
   }
@@ -209,6 +209,15 @@ class BluetoothDeviceRepository implements AbstractBluetoothRepository {
     if (Platform.isIOS) {
     } else if (Platform.isAndroid) {
       return _connectionAndroid?.isConnected ?? false;
+    }
+    return false;
+  }
+
+  @override
+  bool? disconnectionSource() {
+    if (Platform.isIOS) {
+    } else if (Platform.isAndroid) {
+      return _connectionAndroid?.isConnected; // null - by remote; false - by host; true - not disconnected
     }
     return false;
   }

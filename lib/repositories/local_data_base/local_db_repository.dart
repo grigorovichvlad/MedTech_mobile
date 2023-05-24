@@ -47,6 +47,10 @@ class LocalDBRepository {
     final isar = await db;
     final data = ControllerData(dataJSON: json);
     isar.writeTxnSync<void>(() => isar.controllerDatas.putSync(data));
-
   }
-}
+
+  Future<int> getControllerDataSize() async {
+    final isar = await db;
+    return isar.controllerDatas.getSizeSync();
+  }
+ }

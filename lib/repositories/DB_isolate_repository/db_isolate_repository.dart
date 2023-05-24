@@ -51,6 +51,7 @@ class DBIsolateRepository {
   }
 
   void sendControllerData(String data, String token) {
+
     if (_isolate != null) {
       _isolateSendPort?.send(['send', data, token]);
     }

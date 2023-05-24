@@ -5,18 +5,13 @@ abstract class StatusEvent extends Equatable{
 }
 
 class LoadStatusScreen extends StatusEvent{
-  LoadStatusScreen();
+  LoadStatusScreen({required this.onDisconnect});
+  final void Function() onDisconnect;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [onDisconnect];
 }
 
-class LoadDataInDB extends StatusEvent{
-  LoadDataInDB();
-
-  @override
-  List<Object?> get props => [];
-}
 class LoadStatus extends StatusEvent{
   LoadStatus();
 
@@ -24,11 +19,3 @@ class LoadStatus extends StatusEvent{
   List<Object?> get props => [];
 }
 
-
-class LoadDataInLocalDB extends StatusEvent{
-  LoadDataInLocalDB({required this.data});
-  final String data;
-
-  @override
-  List<Object?> get props => [];
-}

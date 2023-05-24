@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:med_tech_mobile/features/devices_list/widgets/device_tile.dart';
+import 'package:med_tech_mobile/features/status_page/view/view.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
 import 'package:med_tech_mobile/features/devices_list/bloc/devices_list_bloc.dart';
 import 'package:med_tech_mobile/features/devices_list/widgets/widgets.dart';
@@ -91,8 +92,10 @@ class _BluetoothDevicesState extends State<BluetoothDevices> {
                         _bluetoothDevicesList.add(ConnectDevice(
                             id: device.id,
                             onSubmit: () async {
-                              await Navigator.pushReplacementNamed(
-                                  context, '/status');
+                              await Navigator.pushReplacement(
+                                  context, MaterialPageRoute(
+                                builder: (context) => StatusScreen(name: device.name, adress:  device.id),
+                              ));
                             },
                             closeDialog: () {
                               Navigator.of(context, rootNavigator: true).pop();
