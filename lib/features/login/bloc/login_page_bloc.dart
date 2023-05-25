@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -60,17 +61,21 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
   get devicesRepository => GetIt.I<BluetoothDeviceRepository>();
 
   Future<String?> loginUser(String username, String password) async {
-    // final response = await Dio().post(
-    //   'http://127.0.0.1:8000/api/token/',
-    //   data: {'email': username, 'password': password},
-    // );
-    // await Future.delayed(const Duration(seconds: 1));
+    final response = await Dio().post(
+      'http://127.0.0.1:8000/api/token/',
+      data: {'email': username, 'password': password},
+    );
+    await Future.delayed(const Duration(seconds: 1));
 
     if (/*response.statusCode == 200 ||*/ (username == 'admin' &&
         password == 'admin')) {
       final token = /*(response.data['token'] as String?) ??*/ 'admin';
       return token;
-    } else {
+    }
+    else if (response.statusCode == 400) {
+      emit(LoginPageFailure(exception: null));
+    }
+    else {
       return null;
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,39 +16,60 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  final _controllerPassword =
-      TextEditingController(); //дают возможность получить данные из текстового поля
+  final _controllerPassword = TextEditingController();
   final _controllerUsername = TextEditingController();
   bool isErrorText = false;
+  bool InvalidLogin = false;
 
   String? get _errorText {
-    //TODO: CleanFormat
     if (isErrorText) {
       return '- Поля не должны быть пустыми';
     }
+    if (InvalidLogin) {
+      return '- Неверный логин и пароль';
+    }
     return null;
+  }
+
+
+  late LoginPageBloc _loginBloc;
+  late StreamSubscription<LoginPageState> _loginStateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginBloc = LoginPageBloc();
+    _loginStateSubscription = _loginBloc.stream.listen((state) {
+      if (state is LoginPageFailure) {
+        setState(() {
+          InvalidLogin = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _loginStateSubscription.cancel();
+    _loginBloc.close();
+    super.dispose();
   }
 
   void _submit() {
     final username = _controllerUsername.text;
     final password = _controllerPassword.text;
 
-    isErrorText = password.isEmpty || username.isEmpty;
+    setState(() {
+      isErrorText = password.isEmpty || username.isEmpty;
+    });
 
     if (_errorText == null) {
-      // if there is no error text
-      widget.loginBloc.add(ButtonLoginPressed(
-          username: _controllerUsername.text,
-          password: _controllerPassword.text,
-          onSubmit: widget.onSubmit));
+      _loginBloc.add(ButtonLoginPressed(
+        username: _controllerUsername.text,
+        password: _controllerPassword.text,
+        onSubmit: widget.onSubmit,
+      ));
     }
-  }
-
-  @override
-  void dispose() {
-    _controllerPassword.dispose();
-    _controllerUsername.dispose();
-    super.dispose();
   }
 
   @override
