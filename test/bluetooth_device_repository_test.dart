@@ -7,15 +7,13 @@ void main() {
   group('BluetoothDeviceRepository', () {
     final mockBluetoothDeviceRepository = MockBluetoothDeviceRepository();
 
-    test('connect should successfully connect to a Bluetooth device', () async {
+    test('Подключение к устройству', () async {
       final deviceId = 'mac-address 1';
 
       // Вызываем метод `connect` с мок объекта.
       await mockBluetoothDeviceRepository.connect(deviceId);
+      mockBluetoothDeviceRepository.isConnected();
 
-      // Если нет выброса исключений, значит подключение прошло успешно.
-      // В этом тесте нам не нужно проверять, что именно делает метод `connect`,
-      // так как мы тестируем только его вызов.
       expect(true, true);
     });
   });

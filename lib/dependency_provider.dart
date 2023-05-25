@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:med_tech_mobile/repositories/bluetooth_device/bluetooth_device.dart';
@@ -39,8 +40,14 @@ class MockBluetoothDeviceRepository extends Mock implements BluetoothDeviceRepos
   }
 
   @override
+  bool isConnected() {
+    return true;
+  }
+
+  @override
   FlutterReactiveBle get ble => throw UnimplementedError();
 }
+
 
 
 BluetoothDeviceRepository createBluetoothRepository({required bool isTesting}) {

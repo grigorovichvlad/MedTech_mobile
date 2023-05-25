@@ -13,7 +13,7 @@ import 'dart:isolate';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final bluetoothRepository = createBluetoothRepository(
-      isTesting: false); // true - test on, false test off
+      isTesting: true); // true - test on, false test off
   GetIt.I.registerSingleton<BluetoothDeviceRepository>(
       bluetoothRepository /*BluetoothDeviceRepository(ble: FlutterReactiveBle())*/);
   GetIt.I.registerSingleton<DBIsolateRepository>(DBIsolateRepository());
