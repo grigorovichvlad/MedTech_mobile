@@ -3,6 +3,7 @@ import 'package:med_tech_mobile/repositories/local_data_base/local_db_repository
 import 'package:med_tech_mobile/repositories/local_data_base/models/user_data.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group('LocalDBRepository', () {
     late LocalDBRepository localDBRepository;
 
